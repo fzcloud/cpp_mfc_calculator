@@ -43,10 +43,11 @@ void Calculator::getFormat(string infix)
 		if (stdInfix[i] == '+' || stdInfix[i] == '-')
 		{
 			if (i == 0) stdInfix.insert(0, 1, '0');
-		}
-		else if (stdInfix[i - 1] == '(') {
+			else if (stdInfix[i - 1] == '(') {
 			stdInfix.insert(i, 1, '0');
 		}
+		}
+		
 		
 	}
  
