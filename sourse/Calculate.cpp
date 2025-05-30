@@ -114,12 +114,12 @@ int Calculator::calResult()
 				op2 = figStack.top();
 				figStack.pop();
 			}
-			else return 0;
+			else return 1;
 			if (!figStack.empty()) {
 				op1 = figStack.top();
 				figStack.pop();
 			}
-			else return 0;
+			else return 1;
 
 			figStack.push(op1 + op2);
 		}
@@ -129,12 +129,12 @@ int Calculator::calResult()
 				op2 = figStack.top();
 				figStack.pop();
 			}
-			else return 0;
+			else return 1;
 			if (!figStack.empty()) {
 				op1 = figStack.top();
 				figStack.pop();
 			}
-			else return 0;
+			else return 1;
 
 			figStack.push(op1 - op2);
 		}
@@ -144,12 +144,12 @@ int Calculator::calResult()
 				op2 = figStack.top();
 				figStack.pop();
 			}
-			else return 0;
+			else return 1;
 			if (!figStack.empty()) {
 				op1 = figStack.top();
 				figStack.pop();
 			}
-			else return 0;
+			else return 1;
 
 			figStack.push(op1 * op2);
 		}
@@ -159,13 +159,13 @@ int Calculator::calResult()
 				op2 = figStack.top();
 				figStack.pop();
 			}
-			else return 0;
+			else return 1;
 			if (!figStack.empty()) {
 				op1 = figStack.top();
 				figStack.pop();
 			}
-			else return 0;
-			if (op2 == 0) return 0;
+			else return 1;
+			if (op2 == 0) return 1;
 
 			figStack.push(op1 / op2);
 		}
@@ -175,12 +175,12 @@ int Calculator::calResult()
 				op2 = figStack.top();
 				figStack.pop();
 			}
-			else return 0;
+			else return 1;
 			if (!figStack.empty()) {
 				op1 = figStack.top();
 				figStack.pop();
 			}
-			else return 0;
+			else return 1;
 
 			figStack.push(pow(op1,op2));
 		}
@@ -190,7 +190,7 @@ int Calculator::calResult()
 				op1 = figStack.top();
 				figStack.pop();
 			}
-			else return 0;
+			else return 1;
 
 			figStack.push(abs(op1));
 		}
@@ -200,9 +200,9 @@ int Calculator::calResult()
 				op1 = figStack.top();
 				figStack.pop();
 			}
-			else return 0;
+			else return 1;
 
-			if (op1 != floor(op1) || op1 < 0) return 0;
+			if (op1 != floor(op1) || op1 < 0) return 1;
 
 			if (op1 > 0) {
 				try {
@@ -213,7 +213,7 @@ int Calculator::calResult()
 				}
 			}
 			else if (op1 == 0) op1 = 1;
-			else return 0;
+			else return 1;
 
 			figStack.push((double)op1);
 		}
