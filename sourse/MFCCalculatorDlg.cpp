@@ -376,9 +376,15 @@ void CMFCCalculatorDlg::OnBnClickedButtonEql()
 	GetDlgItemText(IDC_EDIT1, strExp);
 	string infix(CW2A(strExp.GetString())); //cw2a将Unicode转ASCLL
 	cal.calculator(infix);
-	if (cal.isError) {
+	if (cal.isError==1) {
 		strError = "错误";
 		SetDlgItemText(IDC_STATIC, strError);
+	}
+	else if (cal.isError == -1)
+	{
+		strError = "数据溢出";
+		SetDlgItemText(IDC_STATIC, strError);
+
 	}
 	else {
 		strResult.Format(_T("%g"), cal.getResult());

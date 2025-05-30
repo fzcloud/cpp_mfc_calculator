@@ -6,6 +6,7 @@
 #include <iostream>
 #include <cmath>
 #include <string>
+#include <climits>
 
 using namespace std;
 
@@ -29,7 +30,7 @@ enum ABS_OE {
 Calculator::Calculator()
 {
 	result = 0.0;
-	isError = false;
+	isError = 0;
 }
 
 //自定义标准格式化，实现正负数
@@ -68,7 +69,7 @@ void Calculator::calculator(string infix)
 {
 	getFormat(infix); //表达式格式自定义转化（实现正负数）
 	getPostfix(); //后缀表达式转换
-	if (!calResult()) isError = true; //计算结果
+	isError=calResult(); //计算结果
 }
 
 //返回结果
@@ -77,8 +78,22 @@ double Calculator::getResult()
 	return result;
 }
 
+//阶乘（预判溢出）
+unsigned long long safe_factorial(int n)
+{
+	unsigned long long result = 1;
+	for (int i = 1;i <= n;i++) {
+		if (result > ULLONG_MAX / i)
+		{
+			throw std::overflow_error("");
+		}
+		result *= i;
+	}
+	return result;
+}
+
 //计算结果
-bool Calculator::calResult()
+int Calculator::calResult()
 {
 	string tmp;
 	double num=0,op1=0,op2=0;
@@ -98,12 +113,12 @@ bool Calculator::calResult()
 				op2 = figStack.top();
 				figStack.pop();
 			}
-			else return false;
+			else return 0;
 			if (!figStack.empty()) {
 				op1 = figStack.top();
 				figStack.pop();
 			}
-			else return false;
+			else return 0;
 
 			figStack.push(op1 + op2);
 		}
@@ -113,12 +128,12 @@ bool Calculator::calResult()
 				op2 = figStack.top();
 				figStack.pop();
 			}
-			else return false;
+			else return 0;
 			if (!figStack.empty()) {
 				op1 = figStack.top();
 				figStack.pop();
 			}
-			else return false;
+			else return 0;
 
 			figStack.push(op1 - op2);
 		}
@@ -128,12 +143,12 @@ bool Calculator::calResult()
 				op2 = figStack.top();
 				figStack.pop();
 			}
-			else return false;
+			else return 0;
 			if (!figStack.empty()) {
 				op1 = figStack.top();
 				figStack.pop();
 			}
-			else return false;
+			else return 0;
 
 			figStack.push(op1 * op2);
 		}
@@ -143,13 +158,13 @@ bool Calculator::calResult()
 				op2 = figStack.top();
 				figStack.pop();
 			}
-			else return false;
+			else return 0;
 			if (!figStack.empty()) {
 				op1 = figStack.top();
 				figStack.pop();
 			}
-			else return false;
-			if (op2 == 0) return false;
+			else return 0;
+			if (op2 == 0) return 0;
 
 			figStack.push(op1 / op2);
 		}
@@ -159,12 +174,12 @@ bool Calculator::calResult()
 				op2 = figStack.top();
 				figStack.pop();
 			}
-			else return false;
+			else return 0;
 			if (!figStack.empty()) {
 				op1 = figStack.top();
 				figStack.pop();
 			}
-			else return false;
+			else return 0;
 
 			figStack.push(pow(op1,op2));
 		}
@@ -174,7 +189,7 @@ bool Calculator::calResult()
 				op1 = figStack.top();
 				figStack.pop();
 			}
-			else return false;
+			else return 0;
 
 			figStack.push(abs(op1));
 		}
@@ -184,25 +199,26 @@ bool Calculator::calResult()
 				op1 = figStack.top();
 				figStack.pop();
 			}
-			else return false;
+			else return 0;
 
-			if (op1 != floor(op1) || op1 < 0) return false;
+			if (op1 != floor(op1) || op1 < 0) return 0;
 
 			if (op1 > 0) {
-				double jc = 1;
-				for (int i = 1;i <= op1;i++)
-				{
-					jc *= i;
+				try {
+					op1=(unsigned long long)safe_factorial((int)op1);
 				}
-				op1 = jc;
+				catch (overflow_error o) {
+					return -1;
+				}
 			}
-			else return false;
+			else if (op1 == 0) op1 = 1;
+			else return 0;
 
-			figStack.push(op1);
+			figStack.push((double)op1);
 		}
 	}
 	if (!figStack.empty()) result = figStack.top();
-	return true;
+	return 0;
 }
 
 void Calculator::getPostfix()

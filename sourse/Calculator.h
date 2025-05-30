@@ -14,10 +14,10 @@ public:
 	void getFormat(string infix);
 	int getPrior(char c);
 	void getPostfix();
-	bool calResult();
+	int calResult();
 	double getResult();
 	string operatorSym;
-	bool isError;
+	int isError;
 
 private:
 	vector<string> bckFix;
