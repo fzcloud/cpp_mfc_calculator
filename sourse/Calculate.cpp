@@ -10,7 +10,7 @@
 
 using namespace std;
 
-//·ûºÅÓÅÏÈ¼¶Ã¶¾Ù
+//ç¬¦å·ä¼˜å…ˆçº§æšä¸¾
 enum PRIO_LV
 {
 	PRIO_LV0 = 0,
@@ -20,20 +20,20 @@ enum PRIO_LV
 	PRIO_LV4 = 4,
 };
 
-//¾ø¶ÔÖµ·ûºÅ¸öÊıµÄÆæÅ¼ĞÔ
+//ç»å¯¹å€¼ç¬¦å·ä¸ªæ•°çš„å¥‡å¶æ€§
 enum ABS_OE {
 	ABS_ODD = 1,
 	ABS_EVEN = 2,
 };
 
-//³õÊ¼»¯
+//åˆå§‹åŒ–
 Calculator::Calculator()
 {
 	result = 0.0;
 	isError = 0;
 }
 
-//×Ô¶¨Òå±ê×¼¸ñÊ½»¯£¬ÊµÏÖÕı¸ºÊı
+//è‡ªå®šä¹‰æ ‡å‡†æ ¼å¼åŒ–ï¼Œå®ç°æ­£è´Ÿæ•°
 void Calculator::getFormat(string infix)
 {
 	stdInfix = infix;
@@ -61,25 +61,24 @@ int Calculator::getPrior(char c)
 	else if (c == '!') return PRIO_LV4;
 	else return PRIO_LV0;
 
-	string str = "·Ç·¨·ûºÅ";
-	cout << str << endl;
+
 }
 
-//¼ÆËãÁ÷³Ì
+//è®¡ç®—æµç¨‹
 void Calculator::calculator(string infix)
 {
-	getFormat(infix); //±í´ïÊ½¸ñÊ½×Ô¶¨Òå×ª»¯£¨ÊµÏÖÕı¸ºÊı£©
-	getPostfix(); //ºó×º±í´ïÊ½×ª»»
-	isError=calResult(); //¼ÆËã½á¹û
+	getFormat(infix); //è¡¨è¾¾å¼æ ¼å¼è‡ªå®šä¹‰è½¬åŒ–ï¼ˆå®ç°æ­£è´Ÿæ•°ï¼‰
+	getPostfix(); //åç¼€è¡¨è¾¾å¼è½¬æ¢
+	isError=calResult(); //è®¡ç®—ç»“æœ
 }
 
-//·µ»Ø½á¹û
+//è¿”å›ç»“æœ
 double Calculator::getResult()
 {
 	return result;
 }
 
-//½×³Ë£¨Ô¤ÅĞÒç³ö£©
+//é˜¶ä¹˜ï¼ˆé¢„åˆ¤æº¢å‡ºï¼‰
 unsigned long long safe_factorial(int n)
 {
 	unsigned long long result = 1;
@@ -93,7 +92,7 @@ unsigned long long safe_factorial(int n)
 	return result;
 }
 
-//¼ÆËã½á¹û
+//è®¡ç®—ç»“æœ
 int Calculator::calResult()
 {
 	string tmp;
