@@ -1,9 +1,21 @@
-﻿  Calculate.cpp
-C:\Users\HUAWEI\source\repos\MFCCalculator\MFCCalculator\Calculate.cpp(1,9): warning C4603: “_CRT_SECURE_NO_WARNINGS”: 未定义宏或在预编译头使用后定义发生改变
-  (编译源文件“/Calculate.cpp”)
-      C:\Users\HUAWEI\source\repos\MFCCalculator\MFCCalculator\Calculate.cpp(1,9):
-      将宏添加到预编译头中，而不是在此处定义
-      C:\Users\HUAWEI\source\repos\MFCCalculator\MFCCalculator\Calculate.cpp(2,1):
-      使用预编译头
+﻿  Algebra.cpp
+D:\Acrazy_programming\cpp_mfc_calculator\MFCCalculator\Algebra.cpp(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+D:\Acrazy_programming\cpp_mfc_calculator\MFCCalculator\Algebra.cpp(132,33): warning C4244: “+=”: 从“_Ty”转换到“int”，可能丢失数据
+D:\Acrazy_programming\cpp_mfc_calculator\MFCCalculator\Algebra.cpp(132,33): warning C4244:         with
+D:\Acrazy_programming\cpp_mfc_calculator\MFCCalculator\Algebra.cpp(132,33): warning C4244:         [
+D:\Acrazy_programming\cpp_mfc_calculator\MFCCalculator\Algebra.cpp(132,33): warning C4244:             _Ty=double
+D:\Acrazy_programming\cpp_mfc_calculator\MFCCalculator\Algebra.cpp(132,33): warning C4244:         ]
+  (编译源文件“/Algebra.cpp”)
   
-  MFCCalculator.vcxproj -> C:\Users\HUAWEI\source\repos\MFCCalculator\x64\Debug\MFCCalculator.exe
+D:\Acrazy_programming\cpp_mfc_calculator\MFCCalculator\Algebra.cpp(153,29): warning C4244: “参数”: 从“const _Ty”转换到“_Elem”，可能丢失数据
+D:\Acrazy_programming\cpp_mfc_calculator\MFCCalculator\Algebra.cpp(153,29): warning C4244:         with
+D:\Acrazy_programming\cpp_mfc_calculator\MFCCalculator\Algebra.cpp(153,29): warning C4244:         [
+D:\Acrazy_programming\cpp_mfc_calculator\MFCCalculator\Algebra.cpp(153,29): warning C4244:             _Ty=double
+D:\Acrazy_programming\cpp_mfc_calculator\MFCCalculator\Algebra.cpp(153,29): warning C4244:         ]
+D:\Acrazy_programming\cpp_mfc_calculator\MFCCalculator\Algebra.cpp(153,29): warning C4244:         and
+D:\Acrazy_programming\cpp_mfc_calculator\MFCCalculator\Algebra.cpp(153,29): warning C4244:         [
+D:\Acrazy_programming\cpp_mfc_calculator\MFCCalculator\Algebra.cpp(153,29): warning C4244:             _Elem=char
+D:\Acrazy_programming\cpp_mfc_calculator\MFCCalculator\Algebra.cpp(153,29): warning C4244:         ]
+  (编译源文件“/Algebra.cpp”)
+  
+  MFCCalculator.vcxproj -> D:\Acrazy_programming\cpp_mfc_calculator\x64\Debug\MFCCalculator.exe

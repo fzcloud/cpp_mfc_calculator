@@ -183,6 +183,7 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Algebra.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="MFCCalculator.h" />
     <ClInclude Include="MFCCalculatorDlg.h" />
@@ -192,6 +193,7 @@
     <ClInclude Include="Calculator.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Algebra.cpp" />
     <ClCompile Include="MFCCalculator.cpp" />
     <ClCompile Include="MFCCalculatorDlg.cpp" />
     <ClCompile Include="pch.cpp">

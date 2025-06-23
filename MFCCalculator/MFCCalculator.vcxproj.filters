@@ -36,6 +36,9 @@
     <ClInclude Include="Calculator.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Algebra.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MFCCalculator.cpp">
@@ -48,6 +51,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Calculate.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Algebra.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,4 +1,4 @@
-﻿
+
 // MFCCalculatorDlg.cpp: 实现文件
 //
 
@@ -387,7 +387,8 @@ void CMFCCalculatorDlg::OnBnClickedButtonEql()
 
 	}
 	else {
-		strResult.Format(_T("%g"), cal.getResult());
+		std::string resultStr = cal.getResult();
+		strResult = CString(resultStr.c_str());
 		SetDlgItemText(IDC_STATIC, strResult);
 	}
 }
