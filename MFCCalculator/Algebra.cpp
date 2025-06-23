@@ -150,7 +150,7 @@ string Matrix::print(const Matrix &x)
     for (int i = 0; i < x.r; i++)
         for (int j = 0; j < x.c; j++)
         {
-            ans += x.mt[i][j];
+            ans += char(x.mt[i][j] + '0');
             if (i == x.r - 1 && j == x.c - 1)
             {
                 ans += ']';

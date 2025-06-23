@@ -1,5 +1,4 @@
-﻿  pch.cpp
-  Algebra.cpp
+﻿  Algebra.cpp
 D:\Acrazy_programming\cpp_mfc_calculator\MFCCalculator\Algebra.cpp(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
 D:\Acrazy_programming\cpp_mfc_calculator\MFCCalculator\Algebra.cpp(132,33): warning C4244: “+=”: 从“_Ty”转换到“int”，可能丢失数据
 D:\Acrazy_programming\cpp_mfc_calculator\MFCCalculator\Algebra.cpp(132,33): warning C4244:         with
@@ -8,33 +7,9 @@ D:\Acrazy_programming\cpp_mfc_calculator\MFCCalculator\Algebra.cpp(132,33): warn
 D:\Acrazy_programming\cpp_mfc_calculator\MFCCalculator\Algebra.cpp(132,33): warning C4244:         ]
   (编译源文件“/Algebra.cpp”)
   
-D:\Acrazy_programming\cpp_mfc_calculator\MFCCalculator\Algebra.cpp(153,29): warning C4244: “参数”: 从“const _Ty”转换到“_Elem”，可能丢失数据
-D:\Acrazy_programming\cpp_mfc_calculator\MFCCalculator\Algebra.cpp(153,29): warning C4244:         with
-D:\Acrazy_programming\cpp_mfc_calculator\MFCCalculator\Algebra.cpp(153,29): warning C4244:         [
-D:\Acrazy_programming\cpp_mfc_calculator\MFCCalculator\Algebra.cpp(153,29): warning C4244:             _Ty=double
-D:\Acrazy_programming\cpp_mfc_calculator\MFCCalculator\Algebra.cpp(153,29): warning C4244:         ]
-D:\Acrazy_programming\cpp_mfc_calculator\MFCCalculator\Algebra.cpp(153,29): warning C4244:         and
-D:\Acrazy_programming\cpp_mfc_calculator\MFCCalculator\Algebra.cpp(153,29): warning C4244:         [
-D:\Acrazy_programming\cpp_mfc_calculator\MFCCalculator\Algebra.cpp(153,29): warning C4244:             _Elem=char
-D:\Acrazy_programming\cpp_mfc_calculator\MFCCalculator\Algebra.cpp(153,29): warning C4244:         ]
-  (编译源文件“/Algebra.cpp”)
-  
-  MFCCalculator.cpp
-  MFCCalculatorDlg.cpp
-D:\Acrazy_programming\cpp_mfc_calculator\MFCCalculator\MFCCalculatorDlg.cpp(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-D:\Acrazy_programming\cpp_mfc_calculator\MFCCalculator\Calculator.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-  (编译源文件“/MFCCalculatorDlg.cpp”)
-  
-  Calculate.cpp
-D:\Acrazy_programming\cpp_mfc_calculator\MFCCalculator\Calculate.cpp(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-D:\Acrazy_programming\cpp_mfc_calculator\MFCCalculator\Calculator.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-  (编译源文件“/Calculate.cpp”)
-  
-D:\Acrazy_programming\cpp_mfc_calculator\MFCCalculator\Calculate.cpp(316,51): warning C4244: “=”: 从“unsigned __int64”转换到“double”，可能丢失数据
-  (编译源文件“/Calculate.cpp”)
-  
   正在生成代码
-  Previous IPDB was built with incompatible compiler, fall back to full compilation.
-  All 837 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  1 of 837 functions ( 0.1%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    2 functions had inline decision re-evaluated but remain unchanged
   已完成代码的生成
   MFCCalculator.vcxproj -> D:\Acrazy_programming\cpp_mfc_calculator\x64\Release\MFCCalculator.exe
