@@ -10,9 +10,10 @@
 
 using namespace std;
 
-//·ûºÅÓÅÏÈ¼¶Ã¶¾Ù
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¼ï¿½Ã¶ï¿½ï¿½
 enum PRIO_LV
 {
+	
 	PRIO_LV0 = 0,
 	PRIO_LV1 = 1,
 	PRIO_LV2 = 2,
@@ -20,20 +21,20 @@ enum PRIO_LV
 	PRIO_LV4 = 4,
 };
 
-//¾ø¶ÔÖµ·ûºÅ¸öÊýµÄÆæÅ¼ÐÔ
+//ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½Å¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å¼ï¿½ï¿½
 enum ABS_OE {
 	ABS_ODD = 1,
 	ABS_EVEN = 2,
 };
 
-//³õÊ¼»¯
+//ï¿½ï¿½Ê¼ï¿½ï¿½
 Calculator::Calculator()
 {
 	result = 0.0;
 	isError = 0;
 }
 
-//×Ô¶¨Òå±ê×¼¸ñÊ½»¯£¬ÊµÏÖÕý¸ºÊý
+//ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½×¼ï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 void Calculator::getFormat(string infix)
 {
 	stdInfix = infix;
@@ -61,25 +62,25 @@ int Calculator::getPrior(char c)
 	else if (c == '!') return PRIO_LV4;
 	else return PRIO_LV0;
 
-	string str = "·Ç·¨·ûºÅ";
+	string str = "ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½";
 	cout << str << endl;
 }
 
-//¼ÆËãÁ÷³Ì
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 void Calculator::calculator(string infix)
 {
-	getFormat(infix); //±í´ïÊ½¸ñÊ½×Ô¶¨Òå×ª»¯£¨ÊµÏÖÕý¸ºÊý£©
-	getPostfix(); //ºó×º±í´ïÊ½×ª»»
-	isError=calResult(); //¼ÆËã½á¹û
+	getFormat(infix); //ï¿½ï¿½ï¿½ï¿½Ê½ï¿½ï¿½Ê½ï¿½Ô¶ï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	getPostfix(); //ï¿½ï¿½×ºï¿½ï¿½ï¿½ï¿½Ê½×ªï¿½ï¿½
+	isError=calResult(); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 }
 
-//·µ»Ø½á¹û
+//ï¿½ï¿½ï¿½Ø½ï¿½ï¿½
 double Calculator::getResult()
 {
 	return result;
 }
 
-//½×³Ë£¨Ô¤ÅÐÒç³ö£©
+//ï¿½×³Ë£ï¿½Ô¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 unsigned long long safe_factorial(int n)
 {
 	unsigned long long result = 1;
@@ -93,7 +94,7 @@ unsigned long long safe_factorial(int n)
 	return result;
 }
 
-//¼ÆËã½á¹û
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 int Calculator::calResult()
 {
 	string tmp;
