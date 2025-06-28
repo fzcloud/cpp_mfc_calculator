@@ -7,38 +7,43 @@
 using ll = long long;
 using namespace std;
 
+const double EPS = 1e-9;
+
 class Algebra
 {
 public:
 
     virtual string getName() const = 0;
-    virtual bool avai(const Algebra& x, char op) const = 0;
 };
 
 class Matrix : public Algebra
 {
 public:
     int r, c;
-    vector<vector<double>> mt;
+    vector<vector<double>> mt, low, up;
     string s;
 
     Matrix(string &s);
     Matrix(int x, int y);
 
     string getName() const override;
-    bool avai(const Algebra& x, char op) const override;
+    void getLU();
+    int getRank();
 
 
+    unique_ptr<Double> getDet();
+    unique_ptr<Matrix> getInverse();
     unique_ptr<Matrix> trans();
 
     unique_ptr<Matrix> operator+(const Matrix &x);
     unique_ptr<Matrix> operator-(const Matrix &x);
     unique_ptr<Matrix> operator*(const Matrix &x);
-    unique_ptr<Matrix> operator/(const Matrix &x);
+    unique_ptr<Matrix> operator/(Matrix &x);//丑陋无比但是这样简洁一点。。。。。。。。
 
 
     static string print(const Matrix &x);
 };
+//*---------------------------------------------
 
 class Double : public Algebra
 {
@@ -48,7 +53,6 @@ public:
     Double(string &s);
     Double(double x);
     string getName() const override;
-    bool avai(const Algebra& x, char op) const override;
 
 
 
@@ -63,50 +67,9 @@ public:
 };
 
 
-//*------全局函数-------
+//*------GLOBAL START-------
 
-inline unique_ptr<Matrix> operator*(const Double &x, const Matrix &y)
-{
-    Matrix res(y.r, y.c);
+unique_ptr<Matrix> operator*(const Double &x, const Matrix &y);
 
-    for (int i = 0; i < y.r; i++)
-        for (int j = 0; j < y.c; j++)
-        {
-            res.mt[i][j] = x.num * y.mt[i][j];
-        }
-    return make_unique<Matrix>(res);
-} // 数乘,全局函数
-//
+unique_ptr<Matrix> operator*(const Matrix &y, const Double &x);
 
-inline unique_ptr<Matrix> operator*(const Matrix &y, const Double &x)
-{
-    Matrix res(y.r, y.c);
-
-    for (int i = 0; i < y.r; i++)
-        for (int j = 0; j < y.c; j++)
-        {
-            res.mt[i][j] = x.num * y.mt[i][j];
-        }
-    return make_unique<Matrix>(res);
-} // 数乘,全局函数
-
-/*
-class Vect : public Algebra
-{
-public:
-    double mag;
-    vector<double> v;
-
-    Vect(string &s);
-    Vect(const Vect &x);
-    string getName() const override;
-    bool avai(const Algebra& x, char op) const override;
-
-    double meg() const;
-    Vect operator+(const Vect &x);
-    Vect operator-(const Vect &x);
-    Vect operator*(const Vect &x);
-    Vect operator/(const Vect &x);
-    
-};
-*/

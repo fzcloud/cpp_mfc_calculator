@@ -53,18 +53,7 @@ string Matrix::getName() const
 {
     return "Matrix";
 }
-bool Matrix::avai(const Algebra &x, char op) const
-{
-    if(typeid(x) == typeid(Double) && (op == '+' || op == '-'))
-        return false;
-    
-//    if(typeid(x) == typeid(Vect))
- //       return false;//TODO: 下个版本
-    
-    return true;
 
-    
-}
 unique_ptr<Matrix> Matrix::trans()
 {
     Matrix res(c, r);
@@ -92,7 +81,6 @@ unique_ptr<Matrix> Matrix::operator+(const Matrix &x)
     return make_unique<Matrix>(res);
 }
 
-// Scalar addition as a global function
 
 unique_ptr<Matrix> Matrix::operator-(const Matrix &x)
 {
@@ -137,10 +125,9 @@ unique_ptr<Matrix> Matrix::operator*(const Matrix &x)
     return make_unique<Matrix>(res);
 }
 
-unique_ptr<Matrix> Matrix::operator/(const Matrix &x)
+unique_ptr<Matrix> Matrix::operator/(Matrix &x)
 {
-    throw runtime_error("下个版本再见罢\n");
-    return make_unique<Matrix>(0, 0);
+    return *this * (x.getInverse());
 }
 
 string Matrix::print(const Matrix &x)
@@ -148,23 +135,137 @@ string Matrix::print(const Matrix &x)
     string ans;
     ans += '[';
     for (int i = 0; i < x.r; i++)
+    {
         for (int j = 0; j < x.c; j++)
         {
-            ans += char(x.mt[i][j] + '0');
-            if (i == x.r - 1 && j == x.c - 1)
-            {
-                ans += ']';
-            }
-            else if (j == x.c - 1)
-            {
-                ans += ';';
-            }
+            double num = x.mt[i][j];
+            if (fabs(num - floor(num)) < 1e-9)
+                ans += to_string((long long)num);
             else
-            {
+                ans += to_string(num);
+
+            if (i == x.r - 1 && j == x.c - 1)
+                ans += ']';
+            else if (j == x.c - 1)
+                ans += ';';
+            else
                 ans += ',';
-            }
         }
+    }
     return ans;
+}
+
+void Matrix::getLU()
+{
+    if(r != c) throw runtime_error(" r != c!!!");
+    int n = r;
+
+    low = vector<vector<double>>(r, vector<double>(c, 0));
+    up = mt;
+
+
+    for (int i = 0; i < n; i++)
+    {
+        int k = i;
+        for(int j = i + 1; j < n; j++)
+            if(abs(up[j][i]) > abs(up[k][i])) k = j;
+        if(abs(up[k][i]) < EPS) 
+            throw runtime_error("not exist!!!\n");
+        
+        if(i != k) 
+        {
+            swap(up[i], up[k]);
+            swap(low[i], low[k]);
+        }
+
+        for(int j = i + 1; j < n; j++)
+            if(abs(up[j][i]) > EPS)
+                low[j][i] = up[j][i] / up[i][i];
+        for(int j = i + 1; j < n; j++)
+            if(abs(up[j][i]) > EPS)
+            {
+                for(int k = i + 1; k < n; k++) up[j][k] -= low[j][i] * up[i][k];
+                up[j][i] = 0;           
+            }
+    }
+    
+    for (int i = 0; i < n; i++)
+        low[i][i] = 1;
+    
+}
+
+
+int Matrix::getRank()
+{
+
+    vector<vector<double>> tmp = mt;
+    int rank = 0, row = 0, col = 0;
+
+    while (row < r && col < c)
+    {
+        int k = row;
+        for (int i = row + 1; i < r; i++)
+            if (abs(tmp[i][col]) > abs(tmp[k][col]))
+                k = i;
+        
+        if (abs(tmp[k][col]) > EPS)
+        {
+            swap(tmp[row], tmp[k]);
+
+            for (int i = row + 1; i < r; i++)
+            {
+                if (abs(tmp[i][col]) > EPS)
+                {
+                    double mul = tmp[i][col] / tmp[row][col];
+                    for (int j = col; j < c; j++)
+                        tmp[i][j] -= mul * tmp[row][j];
+                }
+            }
+            rank++;
+            row++;
+        }
+        col++;
+    }
+
+    return rank;
+}
+
+unique_ptr<Matrix> Matrix::getInverse()
+{
+    this->getLU();
+    
+    vector<vector<double>> I(r, vector<double>(c, 0));
+    for(int i = 0; i < r; i++) I[i][i] = 1;
+    
+    auto inv = make_unique<Matrix>(r, c);
+    for (int j = 0; j < c; ++j) {
+        for (int i = 0; i < r; ++i) {
+            double sum = 0;
+            for (int k = 0; k < i; ++k)
+                sum += low[i][k] * inv->mt[k][j];
+            inv->mt[i][j] = I[i][j] - sum;
+        }
+    }
+    
+    for (int j = 0; j < c; ++j) {
+        for (int i = r - 1; i >= 0; --i) {
+            double sum = 0;
+            for (int k = i + 1; k < c; ++k)
+                sum += up[i][k] * inv->mt[k][j];
+            inv->mt[i][j] = (inv->mt[i][j] - sum) / up[i][i];
+        }
+    }
+    return inv;
+}
+
+unique_ptr<Double> Matrix::getDet()
+{
+    this->getLU();
+    double det = 1;
+    for (int i = 0; i < r; ++i) {
+        det *= up[i][i];
+    }
+    return make_unique<Double>(det);
 }
 
 //*-----Matrix end-----
@@ -176,26 +277,11 @@ Double::Double(string &s)
     num = stod(s);
 }
 
-Double::Double(double x) : num(x)
-{
-}
+Double::Double(double x) : num(x) {}
 
 string Double::getName() const
 {
     return "Double";
-}
-
-bool Double::avai(const Algebra &x, char op) const
-{
-    if(typeid(x) == typeid(Double) && (op == '+' || op == '-'))
-        return false;
-    
-//    if(typeid(x) == typeid(Vect))
-//        return false;//TODO: 下个版本
-    
-    return true;
-    
-    
 }
 
 unique_ptr<Double> Double::operator+(const Double &x)
@@ -227,7 +313,7 @@ unique_ptr<Double> Double::operator^(const Double &x)
 
 unique_ptr<Double> Double::abs(const Double &x)
 {
-    return make_unique<Double>(std::abs(x.num));
+    return make_unique<Double>(abs(x.num));
 }
 
 
@@ -243,4 +329,28 @@ string Double::print(const Double &x)
 
 //*-----Double end------
 
-//*-----Vect strat------
+//*------GLOBAL start------
+
+unique_ptr<Matrix> operator*(const Double &x, const Matrix &y)
+{
+    Matrix res(y.r, y.c);
+
+    for (int i = 0; i < y.r; i++)
+        for (int j = 0; j < y.c; j++)
+        {
+            res.mt[i][j] = x.num * y.mt[i][j];
+        }
+    return make_unique<Matrix>(res);    
+}
+
+unique_ptr<Matrix> operator*(const Matrix &y, const Double &x)
+{
+    Matrix res(y.r, y.c);
+
+    for (int i = 0; i < y.r; i++)
+        for (int j = 0; j < y.c; j++)
+        {
+            res.mt[i][j] = x.num * y.mt[i][j];
+        }
+    return make_unique<Matrix>(res);
+} // 数乘,全局函数
