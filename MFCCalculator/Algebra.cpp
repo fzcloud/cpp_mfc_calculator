@@ -139,7 +139,7 @@ string Matrix::print(const Matrix &x)
         for (int j = 0; j < x.c; j++)
         {
             double num = x.mt[i][j];
-            if (fabs(num - floor(num)) < 1e-9)
+            if (fabs(num - floor(num)) < EPS)
                 ans += to_string((long long)num);
             else
                 ans += to_string(num);
