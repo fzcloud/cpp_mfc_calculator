@@ -7,6 +7,8 @@
 #include <memory>
 #include <stdexcept>
 
+
+
 using namespace std;
 
 class Calculator
@@ -47,3 +49,10 @@ private:
 	string stdInfix;
 	unique_ptr<Algebra> result;
 };
+
+extern unordered_map<string, vector<int>> avai_mp1;
+extern unordered_map<string, vector<vector<int>>> avai_mp2;
+
+bool avai_1(const unique_ptr<Matrix> &op1_m, const unique_ptr<Double> &op1_d, const string &op);
+
+bool avai_2(const unique_ptr<Matrix> &op1_m, const unique_ptr<Matrix> &op2_m, const unique_ptr<Double> &op1_d, const unique_ptr<Double> &op2_d, const string &op)

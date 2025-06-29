@@ -11,14 +11,27 @@
 #include <memory>
 #include <stdexcept>
 
-#define HOLYSHIT1 unique_ptr<Matrix> op1_m; unique_ptr<Double> op1_d;
-#define HOLYSHIT2 unique_ptr<Matrix> op2_m; unique_ptr<Double> op2_d;
 
 using ll = long long;
 
 using namespace std;
+//1Matrix  2Double
+unordered_map<string, vector<int>> avai_1 = 
+{
+    {"!", {2}},
+    {"abs", {1}},
+    {"inv", {1}},
+    {"det", {1}}
+};
 
-//�������ȼ�ö��
+unordered_map<string, vector<vector<int>>> avai_2 = {
+    {"+", {{1, 1}, {2, 2}}},
+    {"-", {{1, 1}, {2, 2}}},
+    {"*", {{1, 1}, {1, 0}, {0, 1}}}
+};
+
+
+//ȼö
 enum PRIO_LV
 {
 	PRIO_LV0 = 0,
@@ -136,20 +149,36 @@ int Calculator::calResult()
 
 	for (int i = 0;i < bckFix.size();i++)
 	{
+		unique_ptr<Matrix> op1_m, op2_m;
+		unique_ptr<Double> op1_d, op2_d; 		
 		tmp = bckFix[i];
 
 		if (tmp[0] >= '0' && tmp[0] <= '9')
 		{
-			figStack.push(move(make_unique<Double>(tmp)));
+			figStack.push(make_unique<Double>(tmp));
 		}
 		else if (tmp[0] == '[')
 		{
-			figStack.push(move(make_unique<Matrix>(tmp)));
+			figStack.push(make_unique<Matrix>(tmp));
 		}
+		else if (bckFix[i] == "!" || bckFix[i] == "|" || bckFix[i] == "inv" || bckFix[i] == "det")
+		{
+			if(figStack.size() < 1)
+				return 1;
+			
+
+
+		}
+		else if (bckFix[i] == "+" || bckFix[i] == "-" || bckFix[i] == "*" || bckFix[i] == "/" || bckFix[i] == "^")
+		{
+			if(figStack.size() < 2)
+				return 1;
+			
+		}
+
+//!-----------------OLD START-----------------
 		else if (bckFix[i] == "+")
 		{
-			HOLYSHIT1
-			HOLYSHIT2
 			if (!figStack.empty()) {
 				getSub(op2_m, op2_d);
 			}
@@ -159,6 +188,7 @@ int Calculator::calResult()
 			}
 			else return 1;
 			
+
 			if (op1_m && op2_m) 
 			{
 				figStack.push((*op1_m) + (*op2_m));
@@ -176,8 +206,6 @@ int Calculator::calResult()
 		}
 		else if (bckFix[i] == "-")
 		{
-			HOLYSHIT1
-			HOLYSHIT2
 			if (!figStack.empty()) {
 				getSub(op2_m, op2_d);
 			}
@@ -202,8 +230,6 @@ int Calculator::calResult()
 		}
 		else if (bckFix[i] == "*")
 		{
-			HOLYSHIT1
-			HOLYSHIT2
 			if (!figStack.empty()) {
 				getSub(op2_m, op2_d);
 			}
@@ -237,8 +263,6 @@ int Calculator::calResult()
 		}
 		else if (bckFix[i] == "/")
 		{
-			HOLYSHIT1
-			HOLYSHIT2
 			if (!figStack.empty()) {
 				getSub(op2_m, op2_d);
 			}
@@ -259,8 +283,6 @@ int Calculator::calResult()
 		}
 		else if (bckFix[i] == "^")
 		{
-			HOLYSHIT1
-			HOLYSHIT2
 			if (!figStack.empty()) {
 				getSub(op2_m, op2_d);
 			}
@@ -281,7 +303,6 @@ int Calculator::calResult()
 		}
 		else if (bckFix[i] == "|")
 		{
-			HOLYSHIT1
 			if (!figStack.empty()) {
 				getSub(op1_m, op1_d);
 			}
@@ -299,7 +320,6 @@ int Calculator::calResult()
 		}
 		else if (bckFix[i] == "!")
 		{
-			HOLYSHIT1
 			if (!figStack.empty()) {
 				getSub(op1_m, op1_d);
 			}
@@ -324,6 +344,7 @@ int Calculator::calResult()
 
 			figStack.push(move(op1_d));
 		}
+//!----------------OLD END---------------------------
 	}
 	if (!figStack.empty())
 	{
