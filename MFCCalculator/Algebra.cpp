@@ -25,11 +25,19 @@ unique_ptr<Algebra> operator*(const Algebra &x)
 {
     throw runtime_error("illegal!!\n");
 }
-unique_ptr<Algebra> operator/(con Algebra &x)
+unique_ptr<Algebra> operator/(const Algebra &x)
 {
     throw runtime_error("illegal!!\n");
 }
-unique_ptr<ALgebra> getPow(const Algebra &x)
+unique_ptr<Algebra> divBy(const Algebra &x)
+{
+    throw runtime_error("illegal!!\n");
+}
+unique_ptr<Algebra> getPow(const Algebra &x)
+{
+    throw runtime_error("illegal!!\n");
+}
+unique_ptr<Algebra> powBy(const Algebra &x)
 {
     throw runtime_error("illegal!!\n");
 }
@@ -445,9 +453,9 @@ unique_ptr<Algebra> Double::powBy(const Double &x)
     return make_unique<Double>(pow(x.num, num));
 }
 
-unique_ptr<Double> Double::abs(const Double &x)
+unique_ptr<Algebra> Double::abs()
 {
-    return make_unique<Double>(abs(x.num));
+    return make_unique<Double>(abs(num));
 }
 
 

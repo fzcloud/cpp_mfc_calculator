@@ -21,14 +21,14 @@ public:
     virtual unique_ptr<Algebra> operator+(const Algebra &x);
     virtual unique_ptr<Algebra> operator-(const Algebra &x);
     virtual unique_ptr<Algebra> operator*(const Algebra &x);
-    virtual unique_ptr<Algebra> operator/(const Algebra &x); //! 影响matrix的LU,一会再说
+    virtual unique_ptr<Algebra> operator/(const Algebra &x);
     virtual unique_ptr<Algebra> divBy(const Algebra &x);
-    virtual unique_ptr<ALgebra> getPow(const Algebra &x);//!原来是^，修改calculator
+    virtual unique_ptr<Algebra> getPow(const Algebra &x);//!原来是^，修改calculator
     virtual unique_ptr<Algebra> powBy(const Algebra &x);
     virtual unique_ptr<Algebra> getRank();
     virtual unique_ptr<Algebra> getDet();
     virtual unique_ptr<Algebra> getInverse();
-    virtual unique_ptr<Algebra> getTrans();
+    virtual unique_ptr<Algebra> getTrans();//!实现丢了，补上
     virtual unique_ptr<Algebra> getAbs();
 
     
@@ -97,7 +97,7 @@ public:
     unique_ptr<Algebra> getPow(const Double &x) override;
     unique_ptr<Algebra> powBy(const Double &x) override;
 
-    static unique_ptr<Algebra> getAbs(const Double &x) override;
+    unique_ptr<Algebra> getAbs() override;//!从静态改为成员函数
     static string print(const Double &x);
 };
 
