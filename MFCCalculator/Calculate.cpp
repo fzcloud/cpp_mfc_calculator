@@ -10,28 +10,13 @@
 #include <climits>
 #include <memory>
 #include <stdexcept>
-
+#include <map> // 引入map
 
 using ll = long long;
 
 using namespace std;
-//1Matrix  2Double
-unordered_map<string, vector<int>> avai_1 = 
-{
-    {"!", {2}},
-    {"abs", {1}},
-    {"inv", {1}},
-    {"det", {1}}
-};
-
-unordered_map<string, vector<vector<int>>> avai_2 = {
-    {"+", {{1, 1}, {2, 2}}},
-    {"-", {{1, 1}, {2, 2}}},
-    {"*", {{1, 1}, {1, 0}, {0, 1}}}
-};
-
-
-//ȼö
+// 1Matrix  2Double
+// ȼö
 enum PRIO_LV
 {
 	PRIO_LV0 = 0,
@@ -39,446 +24,249 @@ enum PRIO_LV
 	PRIO_LV2 = 2,
 	PRIO_LV3 = 3,
 	PRIO_LV4 = 4,
+	PRIO_LV5 = 5
 };
 
-//����ֵ���Ÿ�������ż��
-enum ABS_OE {
+// 运算符优先级
+map<string, int> priority = 
+{
+	{"+", PRIO_LV1}, {"-", PRIO_LV1}, {"*", PRIO_LV2}, 
+	{"/", PRIO_LV2}, 
+	{"^", PRIO_LV3},
+	{"!", PRIO_LV4}, {"|", PRIO_LV4}, 
+	{"inv", PRIO_LV5}, {"trans", PRIO_LV5}, {"det", PRIO_LV5}, {"rank", PRIO_LV5}
+};
+
+// ֵŸż
+enum ABS_OE
+{
 	ABS_ODD = 1,
 	ABS_EVEN = 2,
 };
 
-//��ʼ��
+// ��ʼ��
 Calculator::Calculator()
 {
 	result = make_unique<Double>(0);
 	isError = 0;
 }
 
-void Calculator::getSub(unique_ptr<Matrix> &m, unique_ptr<Double> &d)
-{
-	if (dynamic_cast<Matrix*>(figStack.top().get())) 
-	{
-		m = getPtr<Matrix>(figStack);
-	} 
-	else if (dynamic_cast<Double*>(figStack.top().get())) 
-	{
-		d = getPtr<Double>(figStack);
-	} 
-	return;
-}
-
-//�Զ����׼��ʽ����ʵ�������ￄ1�7
+// �Զ����׼��ʽ����ʵ�������ￄ1�7
 void Calculator::getFormat(string infix)
 {
 	stdInfix = infix;
 
-	for (size_t i = 0;i < stdInfix.size();i++)
+	for (size_t i = 0; i < stdInfix.size(); i++)
 	{
 		if (stdInfix[i] == '+' || stdInfix[i] == '-')
 		{
-			if (i == 0) stdInfix.insert(0, 1, '0');
-			else if (stdInfix[i - 1] == '(') {
-			stdInfix.insert(i, 1, '0');
+			if (i == 0)
+				stdInfix.insert(0, 1, '0');
+			else if (stdInfix[i - 1] == '(' || stdInfix[i - 1] == ',')
+			{ 
+				stdInfix.insert(i, 1, '0');
+			}
 		}
-		}
-		
-		
 	}
- 
 }
 
-int Calculator::getPrior(char c)
+int Calculator::getPrior(string c)
 {
-	if (c == '+' || c == '-') return PRIO_LV1;
-	else if (c == '*' || c == '/') return PRIO_LV2;
-	else if (c == '^') return PRIO_LV3;
-	else if (c == '!') return PRIO_LV4;
-	else return PRIO_LV0;
-
+	if (priority.count(c))
+	{
+		return priority[c];
+	}
+	return PRIO_LV0;
 }
 
-//��������
+//
 void Calculator::calculator(string infix)
 {
-	getFormat(infix); //����ʽ��ʽ�Զ���ת����ʵ����������
-	getPostfix(); //��׺����ʽת��
-	isError=calResult(); //������
+	getFormat(infix);	   // ����ʽ��ʽ�Զ���ت����ʵ����������
+	getPostfix();		   // ��׺����ʽת��
+	isError = calResult(); // ������
 }
 
-//���ؽ�ￄ1�7
+// ���ؽ�ￄ1�7
 string Calculator::getResult()
 {
 	string ans;
 	if (result)
 	{
-        if (auto d = dynamic_cast<Double*>(result.get())) 
-		{
-            ans = Double::print(*d);
-        } 
-		else if (auto m = dynamic_cast<Matrix*>(result.get())) 
-		{
-            ans = Matrix::print(*m);
-        } 
-		else 
-		{
-            throw ("你看不见我\n");
-        }
-    }
+		if (auto d = dynamic_cast<Double *>(result.get()))
+			ans = Double::print(*d);
+		else if (auto m = dynamic_cast<Matrix *>(result.get()))
+			ans = Matrix::print(*m);
+		else
+			throw("你看不见我\n");
+	}
 
 	return ans;
 }
 
-//TODO :霢�要修改，，但我懒得改
-unsigned long long safe_factorial(int n)
-{
-	unsigned long long result = 1;
-	for (int i = 1;i <= n;i++) {
-		if (result > ULLONG_MAX / i)
-		{
-			throw std::overflow_error("");
-		}
-		result *= i;
-	}
-	return result;
-}
-
-//������
+// ������
 int Calculator::calResult()
 {
-	string tmp;
+	unique_ptr<Algebra> left, right;
 
-	for (int i = 0;i < bckFix.size();i++)
+	for (const auto &token : bckFix)
 	{
-		unique_ptr<Matrix> op1_m, op2_m;
-		unique_ptr<Double> op1_d, op2_d; 		
-		tmp = bckFix[i];
-
-		if (tmp[0] >= '0' && tmp[0] <= '9')
+		if (token[0] >= '0' && token[0] <= '9')
 		{
-			figStack.push(make_unique<Double>(tmp));
+			figStack.push(make_unique<Double>(token));
 		}
-		else if (tmp[0] == '[')
+		else if (token[0] == '[')
 		{
-			figStack.push(make_unique<Matrix>(tmp));
+			figStack.push(make_unique<Matrix>(token));
 		}
-		else if (bckFix[i] == "!" || bckFix[i] == "|" || bckFix[i] == "inv" || bckFix[i] == "det")
+		else if (token == "!" || token == "|" || token == "inv" || token == "trans" || token == "det" || token == "rank")
 		{
-			if(figStack.size() < 1)
+			if (figStack.size() < 1)
 				return 1;
+			right = move(figStack.top());
+			figStack.pop();
 			
-
-
+			if (token == "!")
+				figStack.push(right->getFac());
+			else if (token == "|")
+				figStack.push(right->getAbs());
+			else if (token == "inv")
+				figStack.push(right->getInverse());
+			else if (token == "trans")
+				figStack.push(right->getTrans());
+			else if (token == "det")
+				figStack.push(right->getDet());
+			else if (token == "rank")
+				figStack.push(right->getRank());
 		}
-		else if (bckFix[i] == "+" || bckFix[i] == "-" || bckFix[i] == "*" || bckFix[i] == "/" || bckFix[i] == "^")
+		else if (token == "+" || token == "-" || token == "*" || token == "/" || token == "^")
 		{
-			if(figStack.size() < 2)
+			if (figStack.size() < 2)
 				return 1;
-			
-		}
+			right = move(figStack.top());
+			figStack.pop();
+			left = move(figStack.top());
+			figStack.pop();
 
-//!-----------------OLD START-----------------
-		else if (bckFix[i] == "+")
-		{
-			if (!figStack.empty()) {
-				getSub(op2_m, op2_d);
-			}
-			else return 1;
-			if (!figStack.empty()) {
-				getSub(op1_m, op1_d);
-			}
-			else return 1;
-			
-
-			if (op1_m && op2_m) 
-			{
-				figStack.push((*op1_m) + (*op2_m));
-			} 
-			else if (op1_d && op2_d)
-			{
-				figStack.push((*op1_d) + (*op2_d));
-			}
-			else
-			{
-				throw ("5555\n");
-			}
-			
-
+			if (token == "+")
+				figStack.push(*left + *right);
+			else if (token == "-")
+				figStack.push(*left - *right);
+			else if (token == "*")
+				figStack.push(*left * *right);
+			else if (token == "/")
+				figStack.push(*left / *right);
+			else if (token == "^")
+				figStack.push(left->getPow(*right));
 		}
-		else if (bckFix[i] == "-")
-		{
-			if (!figStack.empty()) {
-				getSub(op2_m, op2_d);
-			}
-			else return 1;
-			if (!figStack.empty()) {
-				getSub(op1_m, op1_d);
-			}
-			else return 1;
-			
-			if (op1_m && op2_m) 
-			{
-				figStack.push((*op1_m) - (*op2_m));
-			} 
-			else if (op1_d && op2_d)
-			{
-				figStack.push((*op1_d) - (*op2_d));
-			}
-			else
-			{
-				throw ("5555\n");
-			}
-		}
-		else if (bckFix[i] == "*")
-		{
-			if (!figStack.empty()) {
-				getSub(op2_m, op2_d);
-			}
-			else return 1;
-			if (!figStack.empty()) {
-				getSub(op1_m, op1_d);
-			}
-			else return 1;
-			
-			if (op1_m && op2_m) 
-			{
-				figStack.push((*op1_m) * (*op2_m));
-			} 
-			else if (op1_d && op2_d)
-			{
-				figStack.push((*op1_d) * (*op2_d));
-			}
-			else if(op1_d && op2_m)
-			{
-				figStack.push((*op1_d) * (*op2_m));
-			}
-			else if(op1_m && op2_d)
-			{
-				figStack.push((*op1_m) * (*op2_d));
-			}
-			else
-			{
-				throw ("5555\n");
-			}
-			
-		}
-		else if (bckFix[i] == "/")
-		{
-			if (!figStack.empty()) {
-				getSub(op2_m, op2_d);
-			}
-			else return 1;
-			if (!figStack.empty()) {
-				getSub(op1_m, op1_d);
-			}
-			else return 1;
-			
-			if (op1_d && op2_d)
-			{
-				figStack.push((*op1_d) / (*op2_d));
-			}
-			else
-			{
-				throw ("5555\n");
-			}
-		}
-		else if (bckFix[i] == "^")
-		{
-			if (!figStack.empty()) {
-				getSub(op2_m, op2_d);
-			}
-			else return 1;
-			if (!figStack.empty()) {
-				getSub(op1_m, op1_d);
-			}
-			else return 1;
-			
-			if (op1_d && op2_d)
-			{
-				figStack.push((*op1_d) ^ (*op2_d));
-			}
-			else
-			{
-				throw ("5555\n");
-			}
-		}
-		else if (bckFix[i] == "|")
-		{
-			if (!figStack.empty()) {
-				getSub(op1_m, op1_d);
-			}
-			else return 1;
-			
-			if (op1_d)
-			{
-				figStack.push(Double::abs(*op1_d));
-			}
-			else
-			{
-				throw ("5555\n");
-			}
-
-		}
-		else if (bckFix[i] == "!")
-		{
-			if (!figStack.empty()) {
-				getSub(op1_m, op1_d);
-			}
-			else return 1;
-			if(op1_m)
-			{
-				return 1;
-			}
-
-			if (op1_d->num != floor(op1_d->num) || op1_d->num < 0) return 1;
-
-			if (op1_d->num > 0) {
-				try {
-					op1_d->num=(unsigned long long)safe_factorial((int)op1_d->num);
-				}
-				catch (overflow_error o) {
-					return -1;
-				}
-			}
-			else if (op1_d->num == 0) op1_d->num = 1;
-			else return 1;
-
-			figStack.push(move(op1_d));
-		}
-//!----------------OLD END---------------------------
 	}
+	if (figStack.size() != 1)
+		throw runtime_error("unbelivable");
+
 	if (!figStack.empty())
 	{
-    if (auto d = dynamic_cast<Double*>(figStack.top().get())) 
-	{
-        result = make_unique<Double>(*d);
-    } 
-	else if (auto m = dynamic_cast<Matrix*>(figStack.top().get())) 
-	{
-        result = make_unique<Matrix>(*m);
-    }
-
+		if (auto d = dynamic_cast<Double *>(figStack.top().get()))
+			result = make_unique<Double>(*d);
+		else if (auto m = dynamic_cast<Matrix *>(figStack.top().get()))
+			result = make_unique<Matrix>(*m);
 	}
 	return 0;
 }
-
+//!-------------------以下必定有bug，没bug我吃------------------------
 void Calculator::getPostfix()
 {
-	int absNum = ABS_ODD;
-	string tmp;
+	bckFix.clear();
+	while (!symStack.empty())
+		symStack.pop();
 
-	for (size_t i = 0;i < stdInfix.size();i++)
+	for (size_t i = 0; i < stdInfix.size(); i++)
 	{
-		tmp = "";
-		switch (stdInfix[i])
+		string token;
+		if (stdInfix[i] == ' ')
+			continue;
+		else if ((stdInfix[i] >= '0' && stdInfix[i] <= '9') || (stdInfix[i] == '.' && i + 1 < stdInfix.size() && stdInfix[i + 1] >= '0' && stdInfix[i + 1] <= '9'))
 		{
-		case '+':
-		case '-':
-		case '*':
-		case '/':
-		case '^':
-		case '!':
-			if (symStack.empty() || symStack.top() == '(' || (symStack.top() == '|' && absNum == ABS_ODD))
-				symStack.push(stdInfix[i]);
-			else {
-				while (!symStack.empty() && (getPrior(symStack.top()) >= getPrior(stdInfix[i])))
-				{
-					tmp += symStack.top();
-					bckFix.push_back(tmp);
-					symStack.pop();
-					tmp = "";
-				}
-				symStack.push(stdInfix[i]);
-			}
-			break;
-		case '|':
-			if (absNum == ABS_ODD)
+			while (i < stdInfix.size() && ((stdInfix[i] >= '0' && stdInfix[i] <= '9') || stdInfix[i] == '.'))
 			{
-				symStack.push(stdInfix[i]);
-				absNum = ABS_EVEN;
-
-				if (i < stdInfix.length() && (stdInfix[i + 1] == '+' || stdInfix[i + 1] == '-'))
-				{
-					stdInfix.insert(i + 1, 1, '0');
-				}
+				token += stdInfix[i];
+				i++;
 			}
-			else {
-				while (!symStack.empty() && symStack.top() != '|') {
-					tmp += symStack.top();
-					bckFix.push_back(tmp);
-					symStack.pop();
-					tmp = "";
-				}
-
-				if (!symStack.empty() && symStack.top() == '|')
-				{
-					tmp += symStack.top();
-					bckFix.push_back(tmp);
-					symStack.pop();
-					absNum = ABS_ODD;
-				}
-				break;
+			i--;
+			bckFix.push_back(token);
+		}
+		else if (stdInfix[i] == '[')//TODO complex Matrix
+		{
+			while(i < stdInfix.size() && stdInfix[i] != ']')
+			{
+				token += stdInfix[i];
+				i++;
 			}
-		case '(':
-			symStack.push(stdInfix[i]);
-			break;
-		case ')':
-			while (!symStack.empty() && symStack.top() != '(')
+			token += ']';
+			bckFix.push_back(token);
+		}
+		else if ((stdInfix[i] >= 'a' && stdInfix[i] <= 'z') || (stdInfix[i] >= 'A' && stdInfix[i] <= 'Z'))
+		{
+			while (i < stdInfix.size() && ((stdInfix[i] >= 'a' && stdInfix[i] <= 'z') || (stdInfix[i] >= 'A' && stdInfix[i] <= 'Z')))
 			{
-				tmp += symStack.top();
-				bckFix.push_back(tmp);
-				symStack.pop();
-				tmp = "";
+				token += stdInfix[i];
+				i++;
 			}
-			if (!symStack.empty() && symStack.top() == '(')
+			i--;
+			if (priority.count(token))
 			{
-				symStack.pop();
-			}
-			break;
-		case '[':
-		
-			for(; i < (int)stdInfix.size(); i++)
-			{
-				tmp += stdInfix[i];
-				if(i == (int)stdInfix.size() - 1 && stdInfix[i] != ']')
-				{
-					throw runtime_error("����ȱ��]");
-				}
-				
-				if(stdInfix[i] == ']')
-				{
-					bckFix.push_back(tmp);
-					break;
-				}	
-			}//*���Դ����ڲ���double�ľ���
-			break;
-		
-
-		default:
-			if (stdInfix[i] >= '0' && stdInfix[i] <= '9')
-			{
-				while (i < stdInfix.length() && (stdInfix[i] >= '0' && stdInfix[i] <= '9' || stdInfix[i] == '.'))
-				{
-					tmp += stdInfix[i];
-					i++;
-				}
-				i--;
-
-				bckFix.push_back(tmp);
+				symStack.push(token);
 			}
 			else
 			{
-				throw runtime_error("�쳣����\n");
+				throw runtime_error("??????\n");
 			}
-			break;
+		}
+		else if (stdInfix[i] == '(')
+		{
+			symStack.push("(");
+		}
+		else if (stdInfix[i] == ')')
+		{
+			while (!symStack.empty() && symStack.top() != "(")
+			{
+				bckFix.push_back(symStack.top());
+				symStack.pop();
+			}
+			if (symStack.empty())
+			{
+				throw runtime_error("() do not match");
+			}
+			symStack.pop();
+			if (!symStack.empty() && getPrior(symStack.top()) == PRIO_LV5)
+			{
+				bckFix.push_back(symStack.top());
+				symStack.pop();
+			}
+		}
+		else
+		{
+			token += stdInfix[i];
+			if (priority.count(token))
+			{
+				while (!symStack.empty() && symStack.top() != "(" && getPrior(symStack.top()) >= getPrior(token))
+				{
+					bckFix.push_back(symStack.top());
+					symStack.pop();
+				}
+				symStack.push(token);
+			}
+			else
+			{
+				throw runtime_error("what did you input???\n");
+			}
 		}
 	}
 
 	while (!symStack.empty())
 	{
-		tmp = "";
-		tmp += symStack.top();
-		bckFix.push_back(tmp);
+		if (symStack.top() == "(")
+			throw runtime_error("() not dmatch");
+		bckFix.push_back(symStack.top());
 		symStack.pop();
-		
 	}
 }

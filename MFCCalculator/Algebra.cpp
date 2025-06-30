@@ -7,7 +7,10 @@
 #include <memory>
 #include <iomanip>
 #include <iostream>
-#define THROW {throw runtime_error("illegal!!!\n");}
+#define THROW                                \
+    {                                        \
+        throw runtime_error("illegal!!!\n"); \
+    }
 using ll = long long;
 using namespace std;
 
@@ -112,7 +115,6 @@ unique_ptr<Algebra> Algebra::getFac()
     throw runtime_error("illegal!!!\n");
 }
 
-
 //*-------Algebra end-------
 
 //*-----Matrix start-----
@@ -196,7 +198,6 @@ unique_ptr<Algebra> Matrix::operator-(const Algebra &x)
     return x.subTo(*this);
 }
 
-
 unique_ptr<Algebra> Matrix::subTo(const Matrix &x)
 {
 
@@ -252,7 +253,7 @@ unique_ptr<Algebra> Matrix::operator*(const Double &x)
         {
             res.mt[i][j] = x.num * mt[i][j];
         }
-    return make_unique<Matrix>(res);    
+    return make_unique<Matrix>(res);
 }
 
 unique_ptr<Algebra> Matrix::operator/(const Algebra &x)
@@ -292,43 +293,43 @@ string Matrix::print(const Matrix &x)
 
 void Matrix::getLU(vector<vector<double>> &low, vector<vector<double>> &up)
 {
-    if(r != c) throw runtime_error(" r != c!!!");
+    if (r != c)
+        throw runtime_error(" r != c!!!");
     int n = r;
 
     low = vector<vector<double>>(r, vector<double>(c, 0));
     up = mt;
 
-
     for (int i = 0; i < n; i++)
     {
         int k = i;
-        for(int j = i + 1; j < n; j++)
-            if(abs(up[j][i]) > abs(up[k][i])) k = j;
-        if(abs(up[k][i]) < EPS) 
+        for (int j = i + 1; j < n; j++)
+            if (abs(up[j][i]) > abs(up[k][i]))
+                k = j;
+        if (abs(up[k][i]) < EPS)
             throw runtime_error("not exist!!!\n");
-        
-        if(i != k) 
+
+        if (i != k)
         {
             swap(up[i], up[k]);
             swap(low[i], low[k]);
         }
 
-        for(int j = i + 1; j < n; j++)
-            if(abs(up[j][i]) > EPS)
+        for (int j = i + 1; j < n; j++)
+            if (abs(up[j][i]) > EPS)
                 low[j][i] = up[j][i] / up[i][i];
-        for(int j = i + 1; j < n; j++)
-            if(abs(up[j][i]) > EPS)
+        for (int j = i + 1; j < n; j++)
+            if (abs(up[j][i]) > EPS)
             {
-                for(int k = i + 1; k < n; k++) up[j][k] -= low[j][i] * up[i][k];
-                up[j][i] = 0;           
+                for (int k = i + 1; k < n; k++)
+                    up[j][k] -= low[j][i] * up[i][k];
+                up[j][i] = 0;
             }
     }
-                
+
     for (int i = 0; i < n; i++)
         low[i][i] = 1;
-    
 }
-
 
 unique_ptr<Algebra> Matrix::getRank()
 {
@@ -342,7 +343,7 @@ unique_ptr<Algebra> Matrix::getRank()
         for (int i = row + 1; i < r; i++)
             if (abs(tmp[i][col]) > abs(tmp[k][col]))
                 k = i;
-        
+
         if (abs(tmp[k][col]) > EPS)
         {
             swap(tmp[row], tmp[k]);
@@ -369,22 +370,27 @@ unique_ptr<Algebra> Matrix::getInverse()
 {
     vector<vector<double>> low, up;
     this->getLU(low, up);
-    
+
     vector<vector<double>> I(r, vector<double>(c, 0));
-    for(int i = 0; i < r; i++) I[i][i] = 1;
-    
+    for (int i = 0; i < r; i++)
+        I[i][i] = 1;
+
     Matrix inv(r, c);
-    for (int j = 0; j < c; ++j) {
-        for (int i = 0; i < r; ++i) {
+    for (int j = 0; j < c; ++j)
+    {
+        for (int i = 0; i < r; ++i)
+        {
             double sum = 0;
             for (int k = 0; k < i; ++k)
                 sum += low[i][k] * inv.mt[k][j];
             inv.mt[i][j] = I[i][j] - sum;
         }
     }
-    
-    for (int j = 0; j < c; ++j) {
-        for (int i = r - 1; i >= 0; --i) {
+
+    for (int j = 0; j < c; ++j)
+    {
+        for (int i = r - 1; i >= 0; --i)
+        {
             double sum = 0;
             for (int k = i + 1; k < c; ++k)
                 sum += up[i][k] * inv.mt[k][j];
@@ -396,10 +402,11 @@ unique_ptr<Algebra> Matrix::getInverse()
 
 unique_ptr<Algebra> Matrix::getDet()
 {
-    vector<vector<double>>  low, up;
+    vector<vector<double>> low, up;
     this->getLU(low, up);
     double det = 1;
-    for (int i = 0; i < r; ++i) {
+    for (int i = 0; i < r; ++i)
+    {
         det *= up[i][i];
     }
     return make_unique<Double>(det);
@@ -420,7 +427,6 @@ string Double::getName() const
 {
     return "Double";
 }
-
 
 unique_ptr<Algebra> Double::operator+(const Algebra &x)
 {
@@ -471,11 +477,11 @@ unique_ptr<Algebra> Double::operator/(const Algebra &x)
 
 unique_ptr<Algebra> Double::divTo(const Matrix &x)
 {
-    if(fabs(num) < EPS)
+    if (fabs(num) < EPS)
         throw runtime_error("chushu is 0'\n");
 
     Matrix res = x;
-    for(int i = 0; i < x.r; i++)
+    for (int i = 0; i < x.r; i++)
         for (int j = 0; j < x.c; j++)
             res.mt[i][j] /= num;
     return make_unique<Matrix>(res);
@@ -506,22 +512,21 @@ unique_ptr<Algebra> Double::getAbs()
 
 unique_ptr<Algebra> Double::getFac()
 {
-    if(num < 0)
+    if (num < 0)
         throw runtime_error("negative has no factorial\n");
-    else if((num - floor(num) > EPS))
+    else if ((num - floor(num) > EPS))
         throw runtime_error("decimal has no factorial\n");
-    
+
     Double res = 1;
 
-    for(int i = 1; i <= num; i++)
+    for (int i = 1; i <= num; i++)
     {
-        if(res.num > 0x3f3f3f3f3f3f3f3f / i)
+        if (res.num > 0x3f3f3f3f3f3f3f3f / i)
             throw runtime_error("too big\n")
-        res.num *= i;
+                res.num *= i;
     }
     return make_unique<Double>(res);
 }
-
 
 string Double::print(const Double &x)
 {
@@ -529,9 +534,8 @@ string Double::print(const Double &x)
     {
         return to_string((int)(x.num));
     }
-    else 
+    else
         return to_string(x.num);
 }
 
 //*-----Double end------
-
