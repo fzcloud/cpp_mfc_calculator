@@ -13,54 +13,87 @@ using namespace std;
 //*-------Algebra start-------
 
 
-unique_ptr<Algebra> operator+(const Algebra &x)
+unique_ptr<Algebra> Algebra::operator+(const Algebra &x)
 {
     throw runtime_error("illegal!!\n");
 }
-unique_ptr<Algebra> operator-(const Algebra &x)
+unique_ptr<Algebra> Algebra::operator+(const Matrix &x)
 {
     throw runtime_error("illegal!!\n");
 }
-unique_ptr<Algebra> operator*(const Algebra &x)
+unique_ptr<Algebra> Algebra::operator+(const Double &x)
 {
     throw runtime_error("illegal!!\n");
 }
-unique_ptr<Algebra> operator/(const Algebra &x)
+
+unique_ptr<Algebra> Algebra::operator-(const Algebra &x)
 {
     throw runtime_error("illegal!!\n");
 }
-unique_ptr<Algebra> divBy(const Algebra &x)
+unique_ptr<Algebra> Algebra::subTo(const Matrix &x)
 {
     throw runtime_error("illegal!!\n");
 }
-unique_ptr<Algebra> getPow(const Algebra &x)
+unique_ptr<Algebra> Algebra::subTo(const Double &x)
 {
     throw runtime_error("illegal!!\n");
 }
-unique_ptr<Algebra> powBy(const Algebra &x)
+
+unique_ptr<Algebra> Algebra::operator*(const Algebra &x)
 {
     throw runtime_error("illegal!!\n");
 }
-unique_ptr<Algebra> getRank()
+unique_ptr<Algebra> Algebra::operator*(const Matrix &x)
 {
     throw runtime_error("illegal!!\n");
 }
-unique_ptr<Algebra> getDet()
+unique_ptr<Algebra> Algebra::operator*(const Double &x)
 {
     throw runtime_error("illegal!!\n");
 }
-unique_ptr<Algebra> getInverse()
+
+unique_ptr<Algebra> Algebra::operator/(const Algebra &x)
 {
     throw runtime_error("illegal!!\n");
 }
-unique_ptr<Algebra> getTrans()
+unique_ptr<Algebra> Algebra::divTo(const Matrix &x)
 {
     throw runtime_error("illegal!!\n");
 }
-unique_ptr<Algebra> getAbs()
+unique_ptr<Algebra> Algebra::divTo(const Double &x)
 {
     throw runtime_error("illegal!!\n");
 }
+
+
+unique_ptr<Algebra> Algebra::getPow(const Algebra &x)
+{
+    throw runtime_error("illegal!!\n");
+}
+unique_ptr<Algebra> Algebra::powTo(const Double &x)
+{
+    throw runtime_error("illegal!!\n");
+}
+unique_ptr<Algebra> Algebra::getRank()
+{
+    throw runtime_error("illegal!!\n");
+}
+unique_ptr<Algebra> Algebra::getDet()
+{
+    throw runtime_error("illegal!!\n");
+}
+unique_ptr<Algebra> Algebra::getInverse()
+{
+    throw runtime_error("illegal!!\n");
+}
+unique_ptr<Algebra> Algebra::getTrans()
+{
+    throw runtime_error("illegal!!\n");
+}
+unique_ptr<Algebra> Algebra::getAbs()
+{
+    throw runtime_error("illegal!!\n");
+}   
 
 //*-------Algebra start-------
 
@@ -108,7 +141,7 @@ string Matrix::getName() const
     return "Matrix";
 }
 
-unique_ptr<Matrix> Matrix::trans()
+unique_ptr<Algebra> Matrix::getTrans()
 {
     Matrix res(c, r);
     for (int i = 0; i < c; i++)
@@ -142,11 +175,11 @@ unique_ptr<Algebra> Matrix::operator+(const Matrix &x)
 
 unique_ptr<Algebra> Matrix::operator-(const Algebra &x)
 {
-    return x - (*this);
+    return x.subTo(*this);
 }
 
 
-unique_ptr<Algebra> Matrix::operator-(const Matrix &x)
+unique_ptr<Algebra> Matrix::subTo(const Matrix &x)
 {
 
     if (r != x.r || c != x.c)
@@ -158,7 +191,7 @@ unique_ptr<Algebra> Matrix::operator-(const Matrix &x)
     for (int i = 0; i < r; i++)
         for (int j = 0; j < c; j++)
         {
-            res.mt[i][j] = mt[i][j] - x.mt[i][j];
+            res.mt[i][j] = x.mt[i][j] - mt[i][j];
         }
     return make_unique<Matrix>(res);
 }
@@ -181,7 +214,7 @@ unique_ptr<Algebra> Matrix::operator*(const Matrix &x)
     for (int i = 0; i < r; i++)
         for (int j = 0; j < x.c; j++)
         {
-            int num = 0;
+            double num = 0;
             for (int k = 0; k < c; k++)
             {
                 num += mt[i][k] * x.mt[k][j];
@@ -206,17 +239,12 @@ unique_ptr<Algebra> Matrix::operator*(const Double &x)
 
 unique_ptr<Algebra> Matrix::operator/(const Algebra &x)
 {
-    return x.divBy(*this);
+    return x.divTo(*this);
 }
 
-unique_ptr<Algebra> Matrix::divBy(const Matrix &x)
+unique_ptr<Algebra> Matrix::divTo(const Matrix &x)
 {
-    return x * this->getInverese();
-}
-
-unique_ptr<Algebra> Matrix::divBy(const Double &x)
-{
-    return x * this->getInverse();
+    return x * (this->getInverse());
 }
 
 string Matrix::print(const Matrix &x)
@@ -244,7 +272,7 @@ string Matrix::print(const Matrix &x)
     return ans;
 }
 
-static void Matrix::getLU(vector<vector<double>> &up,vector<vector<double>> &low)
+void Matrix::getLU(vector<vector<double>> &low, vector<vector<double>> &up)
 {
     if(r != c) throw runtime_error(" r != c!!!");
     int n = r;
@@ -322,7 +350,7 @@ unique_ptr<Algebra> Matrix::getRank()
 unique_ptr<Algebra> Matrix::getInverse()
 {
     vector<vector<double>> low, up;
-    Matrix::getLU(low, up);
+    this->getLU(low, up);
     
     vector<vector<double>> I(r, vector<double>(c, 0));
     for(int i = 0; i < r; i++) I[i][i] = 1;
@@ -350,8 +378,8 @@ unique_ptr<Algebra> Matrix::getInverse()
 
 unique_ptr<Algebra> Matrix::getDet()
 {
-    vector<vetor<double>>  low, up;
-    Matrix::getLU(low, up);
+    vector<vector<double>>  low, up;
+    this->getLU(low, up);
     double det = 1;
     for (int i = 0; i < r; ++i) {
         det *= up[i][i];
@@ -388,12 +416,12 @@ unique_ptr<Algebra> Double::operator+(const Double &x)
 
 unique_ptr<Algebra> Double::operator-(const Algebra &x)
 {
-    return x - (*this);
+    return x.subTo(*this);
 }
 
-unique_ptr<Algebra> Double::operator-(const Double &x)
+unique_ptr<Algebra> Double::subTo(const Double &x)
 {
-    return make_unique<Double>(num - x.num);
+    return make_unique<Double>(x.num - num);
 }
 
 unique_ptr<Algebra> Double::operator*(const Algebra &x)
@@ -420,22 +448,22 @@ unique_ptr<Algebra> Double::operator*(const Double &x)
 
 unique_ptr<Algebra> Double::operator/(const Algebra &x)
 {
-    return x.divBy(*this);
+    return x.divTo(*this);
 }
 
-unique_ptr<Algebra> Double::divBy(const Matrix &x)
+unique_ptr<Algebra> Double::divTo(const Matrix &x)
 {
     if(fabs(num) < EPS)
         throw runtime_error("chushu is 0'\n");
 
-    Matrix res(x.r, x.c);
+    Matrix res = x;
     for(int i = 0; i < x.r; i++)
         for (int j = 0; j < x.c; j++)
             res.mt[i][j] /= num;
     return make_unique<Matrix>(res);
 }
 
-unique_ptr<Algebra> Double::divBy(const Double &x)
+unique_ptr<Algebra> Double::divTo(const Double &x)
 {
 
     if (fabs(num) < EPS)
@@ -445,23 +473,23 @@ unique_ptr<Algebra> Double::divBy(const Double &x)
 
 unique_ptr<Algebra> Double::getPow(const Algebra &x)
 {
-    return x.powBy(*this);
+    return x.powTo(*this);
 }
 
-unique_ptr<Algebra> Double::powBy(const Double &x)
+unique_ptr<Algebra> Double::powTo(const Double &x)
 {
     return make_unique<Double>(pow(x.num, num));
 }
 
-unique_ptr<Algebra> Double::abs()
+unique_ptr<Algebra> Double::getAbs()
 {
-    return make_unique<Double>(abs(num));
+    return make_unique<Double>(fabs(num));
 }
 
 
 string Double::print(const Double &x)
 {
-    if (fabs(x.num - floor(x.num)) < 1e-7)
+    if (fabs(x.num - floor(x.num)) < EPS)
     {
         return to_string((int)(x.num));
     }
