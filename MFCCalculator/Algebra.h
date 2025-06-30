@@ -12,14 +12,14 @@ const double EPS = 1e-9;
 class Matrix;
 class Double;
 
-class Algebra
-{
+class Algebra//*基类：：参数为Algebra的入口运算，子类参数合法作为左运算数的出口运算，全部抛出异常
+{//*子类：：参数Algebra的合法入口运算，子类参数作为左运算数的合法出口运算
 public:
 
     virtual string getName() const = 0;
 
     virtual unique_ptr<Algebra> operator+(const Algebra &x);
-    virtual unique_ptr<Algebra> operator+(const Matrix &x);
+    virtual unique_ptr<Algebra> operator+(const Matrix &x);//matrix + double  double(matrix)
     virtual unique_ptr<Algebra> operator+(const Double &x);
 
     virtual unique_ptr<Algebra> operator-(const Algebra &x);

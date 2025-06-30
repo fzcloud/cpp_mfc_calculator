@@ -7,95 +7,108 @@
 #include <memory>
 #include <iomanip>
 #include <iostream>
+#define THROW {throw runtime_error("illegal!!!\n");}
 using ll = long long;
 using namespace std;
 
 //*-------Algebra start-------
 
-
 unique_ptr<Algebra> Algebra::operator+(const Algebra &x)
 {
-    throw runtime_error("illegal!!\n");
+    throw runtime_error("illegal!!!\n");
 }
+
 unique_ptr<Algebra> Algebra::operator+(const Matrix &x)
 {
-    throw runtime_error("illegal!!\n");
+    throw runtime_error("illegal!!!\n");
 }
+
 unique_ptr<Algebra> Algebra::operator+(const Double &x)
 {
-    throw runtime_error("illegal!!\n");
+    throw runtime_error("illegal!!!\n");
 }
 
 unique_ptr<Algebra> Algebra::operator-(const Algebra &x)
 {
-    throw runtime_error("illegal!!\n");
+    throw runtime_error("illegal!!!\n");
 }
+
 unique_ptr<Algebra> Algebra::subTo(const Matrix &x)
 {
-    throw runtime_error("illegal!!\n");
+    throw runtime_error("illegal!!!\n");
 }
+
 unique_ptr<Algebra> Algebra::subTo(const Double &x)
 {
-    throw runtime_error("illegal!!\n");
+    throw runtime_error("illegal!!!\n");
 }
 
 unique_ptr<Algebra> Algebra::operator*(const Algebra &x)
 {
-    throw runtime_error("illegal!!\n");
+    throw runtime_error("illegal!!!\n");
 }
+
 unique_ptr<Algebra> Algebra::operator*(const Matrix &x)
 {
-    throw runtime_error("illegal!!\n");
+    throw runtime_error("illegal!!!\n");
 }
+
 unique_ptr<Algebra> Algebra::operator*(const Double &x)
 {
-    throw runtime_error("illegal!!\n");
+    throw runtime_error("illegal!!!\n");
 }
 
 unique_ptr<Algebra> Algebra::operator/(const Algebra &x)
 {
-    throw runtime_error("illegal!!\n");
-}
-unique_ptr<Algebra> Algebra::divTo(const Matrix &x)
-{
-    throw runtime_error("illegal!!\n");
-}
-unique_ptr<Algebra> Algebra::divTo(const Double &x)
-{
-    throw runtime_error("illegal!!\n");
+    throw runtime_error("illegal!!!\n");
 }
 
+unique_ptr<Algebra> Algebra::divTo(const Matrix &x)
+{
+    throw runtime_error("illegal!!!\n");
+}
+
+unique_ptr<Algebra> Algebra::divTo(const Double &x)
+{
+    throw runtime_error("illegal!!!\n");
+}
 
 unique_ptr<Algebra> Algebra::getPow(const Algebra &x)
 {
-    throw runtime_error("illegal!!\n");
+    throw runtime_error("illegal!!!\n");
 }
+
 unique_ptr<Algebra> Algebra::powTo(const Double &x)
 {
-    throw runtime_error("illegal!!\n");
+    throw runtime_error("illegal!!!\n");
 }
+
 unique_ptr<Algebra> Algebra::getRank()
 {
-    throw runtime_error("illegal!!\n");
+    throw runtime_error("illegal!!!\n");
 }
+
 unique_ptr<Algebra> Algebra::getDet()
 {
-    throw runtime_error("illegal!!\n");
+    throw runtime_error("illegal!!!\n");
 }
+
 unique_ptr<Algebra> Algebra::getInverse()
 {
-    throw runtime_error("illegal!!\n");
+    throw runtime_error("illegal!!!\n");
 }
+
 unique_ptr<Algebra> Algebra::getTrans()
 {
-    throw runtime_error("illegal!!\n");
+    throw runtime_error("illegal!!!\n");
 }
+
 unique_ptr<Algebra> Algebra::getAbs()
 {
-    throw runtime_error("illegal!!\n");
-}   
+    throw runtime_error("illegal!!!\n");
+}
 
-//*-------Algebra start-------
+//*-------Algebra end-------
 
 //*-----Matrix start-----
 
