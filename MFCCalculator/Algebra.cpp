@@ -107,6 +107,11 @@ unique_ptr<Algebra> Algebra::getAbs()
 {
     throw runtime_error("illegal!!!\n");
 }
+unique_ptr<Algebra> Algebra::getFac()
+{
+    throw runtime_error("illegal!!!\n");
+}
+
 
 //*-------Algebra end-------
 
@@ -497,6 +502,24 @@ unique_ptr<Algebra> Double::powTo(const Double &x)
 unique_ptr<Algebra> Double::getAbs()
 {
     return make_unique<Double>(fabs(num));
+}
+
+unique_ptr<Algebra> Double::getFac()
+{
+    if(num < 0)
+        throw runtime_error("negative has no factorial\n");
+    else if((num - floor(num) > EPS))
+        throw runtime_error("decimal has no factorial\n");
+    
+    Double res = 1;
+
+    for(int i = 1; i <= num; i++)
+    {
+        if(res.num > 0x3f3f3f3f3f3f3f3f / i)
+            throw runtime_error("too big\n")
+        res.num *= i;
+    }
+    return make_unique<Double>(res);
 }
 
 

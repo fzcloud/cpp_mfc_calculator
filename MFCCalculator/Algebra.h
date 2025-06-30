@@ -43,6 +43,8 @@ public:
     virtual unique_ptr<Algebra> getInverse();
     virtual unique_ptr<Algebra> getTrans();
 
+
+    virtual unique_ptr<Algebra> getFac();
     virtual unique_ptr<Algebra> getAbs();
 
 };
@@ -76,6 +78,7 @@ public:
 
     unique_ptr<Algebra> operator/(const Algebra &x) override;
     unique_ptr<Algebra> divTo(const Matrix &x) override;
+    
 
     static string print(const Matrix &x);
     void getLU(vector<vector<double>> &low, vector<vector<double>> &up);
@@ -110,6 +113,8 @@ public:
     unique_ptr<Algebra> powTo(const Double &x) override;
 
     unique_ptr<Algebra> getAbs() override;//!从静态改为成员函数
+    unique_ptr<Algebra> getFac() override;
+
     static string print(const Double &x);
 };
 
