@@ -21,12 +21,12 @@ unique_ptr<Algebra> Algebra::operator+(const Algebra &x)
     throw runtime_error("illegal!!!\n");
 }
 
-unique_ptr<Algebra> Algebra::operator+(const Matrix &x)
+unique_ptr<Algebra> Algebra::addTo(const Matrix &x)
 {
     throw runtime_error("illegal!!!\n");
 }
 
-unique_ptr<Algebra> Algebra::operator+(const Double &x)
+unique_ptr<Algebra> Algebra::addTo(const Double &x)
 {
     throw runtime_error("illegal!!!\n");
 }
@@ -51,12 +51,12 @@ unique_ptr<Algebra> Algebra::operator*(const Algebra &x)
     throw runtime_error("illegal!!!\n");
 }
 
-unique_ptr<Algebra> Algebra::operator*(const Matrix &x)
+unique_ptr<Algebra> Algebra::mulTo(const Matrix &x)
 {
     throw runtime_error("illegal!!!\n");
 }
 
-unique_ptr<Algebra> Algebra::operator*(const Double &x)
+unique_ptr<Algebra> Algebra::mulTo(const Double &x)
 {
     throw runtime_error("illegal!!!\n");
 }
@@ -84,6 +84,11 @@ unique_ptr<Algebra> Algebra::getPow(const Algebra &x)
 unique_ptr<Algebra> Algebra::powTo(const Double &x)
 {
     throw runtime_error("illegal!!!\n");
+}
+
+unique_ptr<Algebra> Algebra::powTo(const Matrix &x)
+{
+	throw runtime_error("illegal!!!\n");
 }
 
 unique_ptr<Algebra> Algebra::getRank()
@@ -161,6 +166,11 @@ string Matrix::getName() const
     return "Matrix";
 }
 
+unique_ptr<Matrix> Matrix::getSub()
+{
+	return unique_ptr<Matrix>(static_cast<Matrix *>(this->release()));
+}
+
 unique_ptr<Algebra> Matrix::getTrans()
 {
     Matrix res(c, r);
@@ -174,10 +184,10 @@ unique_ptr<Algebra> Matrix::getTrans()
 
 unique_ptr<Algebra> Matrix::operator+(const Algebra &x)
 {
-    return x + (*this);
+    return x.addTo((*(this->getSub())));
 }
 
-unique_ptr<Algebra> Matrix::operator+(const Matrix &x)
+unique_ptr<Algebra> Matrix::addTo(const Matrix &x)
 {
     if (r != x.r || c != x.c)
     {
@@ -195,7 +205,7 @@ unique_ptr<Algebra> Matrix::operator+(const Matrix &x)
 
 unique_ptr<Algebra> Matrix::operator-(const Algebra &x)
 {
-    return x.subTo(*this);
+    return x.subTo(*(this->getSub()));
 }
 
 unique_ptr<Algebra> Matrix::subTo(const Matrix &x)
@@ -215,36 +225,29 @@ unique_ptr<Algebra> Matrix::subTo(const Matrix &x)
     return make_unique<Matrix>(res);
 }
 
-//*true
 unique_ptr<Algebra> Matrix::operator*(const Algebra &x)
 {
-    return x * (*this);
+    return x.mulTo((*(this->getSub())));
 }
 
-unique_ptr<Algebra> Matrix::operator*(const Matrix &x)
+unique_ptr<Algebra> Matrix::mulTo(const Matrix &x)//!x left  *this right
 {
-    if (c != x.r)
+    if (x.c != r)
     {
         throw runtime_error("行列不匹配!!\n");
     }
 
-    Matrix res(r, x.c);
+    Matrix res(x.r, c);
 
-    for (int i = 0; i < r; i++)
-        for (int j = 0; j < x.c; j++)
-        {
-            double num = 0;
-            for (int k = 0; k < c; k++)
-            {
-                num += mt[i][k] * x.mt[k][j];
-            }
-            res.mt[i][j] = num;
-        }
+    for (int i = 0; i < x.r; i++)
+        for (int j = 0; j < c; j++)
+            for (int k = 0; k < x.c; k++)
+                res.mt[i][j] += x.mt[i][k] * mt[k][j];
 
     return make_unique<Matrix>(res);
 }
 
-unique_ptr<Algebra> Matrix::operator*(const Double &x)
+unique_ptr<Algebra> Matrix::mulTo(const Double &x)
 {
     Matrix res(r, c);
 
@@ -258,7 +261,12 @@ unique_ptr<Algebra> Matrix::operator*(const Double &x)
 
 unique_ptr<Algebra> Matrix::operator/(const Algebra &x)
 {
-    return x.divTo(*this);
+    return x.divTo(*(this->getSub()));
+}
+
+unique_ptr<Algebra> Matrix::getPow(const Algebra &x)
+{
+	return x.powTo(*(this->getSub()));
 }
 
 unique_ptr<Algebra> Matrix::divTo(const Matrix &x)
@@ -428,19 +436,24 @@ string Double::getName() const
     return "Double";
 }
 
-unique_ptr<Algebra> Double::operator+(const Algebra &x)
+unique_ptr<Double> Double::getSub()
 {
-    return x + (*this);
+	return unique_ptr<Double>(static_cast<Double *>(this->release()));
 }
 
-unique_ptr<Algebra> Double::operator+(const Double &x)
+unique_ptr<Algebra> Double::operator+(const Algebra &x)
+{
+    return x.addTo((*(this->getSub())));
+}
+
+unique_ptr<Algebra> Double::addTo(const Double &x)
 {
     return make_unique<Double>(num + x.num);
 }
 
 unique_ptr<Algebra> Double::operator-(const Algebra &x)
 {
-    return x.subTo(*this);
+    return x.subTo(*(this->getSub()));
 }
 
 unique_ptr<Algebra> Double::subTo(const Double &x)
@@ -450,10 +463,10 @@ unique_ptr<Algebra> Double::subTo(const Double &x)
 
 unique_ptr<Algebra> Double::operator*(const Algebra &x)
 {
-    return x * (*this);
+    return x.mulTo((*(this->getSub())));
 }
 
-unique_ptr<Algebra> Double::operator*(const Matrix &x)
+unique_ptr<Algebra> Double::mulTo(const Matrix &x)
 {
     Matrix res(x.r, x.c);
 
@@ -465,14 +478,14 @@ unique_ptr<Algebra> Double::operator*(const Matrix &x)
     return make_unique<Matrix>(res);
 } // 数乘,全局函数
 
-unique_ptr<Algebra> Double::operator*(const Double &x)
+unique_ptr<Algebra> Double::mulTo(const Double &x)
 {
     return make_unique<Double>(num * x.num);
 }
 
 unique_ptr<Algebra> Double::operator/(const Algebra &x)
 {
-    return x.divTo(*this);
+    return x.divTo(*(this->getSub()));
 }
 
 unique_ptr<Algebra> Double::divTo(const Matrix &x)
@@ -497,12 +510,55 @@ unique_ptr<Algebra> Double::divTo(const Double &x)
 
 unique_ptr<Algebra> Double::getPow(const Algebra &x)
 {
-    return x.powTo(*this);
+    return x.powTo(*(this->getSub()));
 }
 
-unique_ptr<Algebra> Double::powTo(const Double &x)
+unique_ptr<Algebra> Double::powTo(const Double &x)///x.num bottom  num pow
 {
-    return make_unique<Double>(pow(x.num, num));
+	Doublw res(1);
+	if (num >= 0 && num - floor(num) < EPS)
+	{
+		double mul = x.num;
+		while (num)
+		{
+			if (num & 1)
+				res.num *= mul;
+			mul *= mul;
+			num >>= 1;
+		}
+	}
+	else
+	{
+		res.num = pow(x.num, num);
+	}
+    return make_unique<Double>(res);
+}
+
+unique_ptr<Algebra> Double::powTo(const Matrix &x)
+{
+	if (x.r != x.c)
+		throw runtime_error("r != c!!!!\n");
+
+	Matrix res(x.r, x.c);
+	for (int i = 0; i < x.r; i++)
+		res.mt[i][i] = 1;
+	
+	if (num >= 0 && num - floor(num) < EPS)
+	{
+		Matrix mul = x;
+		while (num)
+		{
+			if (num & 1)
+				res = res * mul;
+			mul = mul * mul;
+			num >>= 1;
+
+		}
+	}
+	else
+		thorw("matrix pow must be Z+")
+
+	return make_unique<Matrix>(res);
 }
 
 unique_ptr<Algebra> Double::getAbs()
