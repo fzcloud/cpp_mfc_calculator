@@ -1,4 +1,6 @@
 # cpp_mfc_calculator
+## -------v2.1 little unstable-----
+加入了基本报错信息
 ## -------v2.0 very unstable-------
 2.0版本发布，现在**又**可以运行了，加入了矩阵转置，求秩，求逆，求对应行列式值 <br />
 输入trans(), rank(), inv(), det()求解<br />
