@@ -375,7 +375,16 @@ void CMFCCalculatorDlg::OnBnClickedButtonEql()
 	CString strError;
 	GetDlgItemText(IDC_EDIT1, strExp);
 	string infix(CW2A(strExp.GetString())); //cw2a将Unicode转ASCLL
-	cal.calculator(infix);
+	try
+	{
+		cal.calculator(infix);
+	}
+	catch (runtime_error &err)
+	{
+		CString strError(err.what());
+		SetDlgItemText(IDC_STATIC, strError);
+		return;
+	}
 	if (cal.isError==1) {
 		strError = "错误";
 		SetDlgItemText(IDC_STATIC, strError);
