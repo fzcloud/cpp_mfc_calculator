@@ -263,24 +263,19 @@ unique_ptr<Algebra> Matrix::divTo(const Matrix &x) const
 string Matrix::print(const Matrix &x)
 {
     string ans;
-    ans += '[';
     for (int i = 0; i < x.r; i++)
     {
+        ans += "|";
         for (int j = 0; j < x.c; j++)
         {
             double num = x.mt[i][j];
-            if (fabs(num - floor(num)) < EPS)
-                ans += to_string((long long)num);
-            else
                 ans += to_string(num);
-
-            if (i == x.r - 1 && j == x.c - 1)
-                ans += ']';
-            else if (j == x.c - 1)
-                ans += ';';
-            else
-                ans += ',';
+            ans += "  ";
         }
+        if(!ans.empty())
+            ans.pop_back();
+        ans +=  "|";
+        ans += "\n"; 
     }
     return ans;
 }
@@ -315,6 +310,10 @@ void Matrix::getLU(vector<vector<double>> &low, vector<vector<double>> &up) cons
         for (int j = i + 1; j < n; j++)
             if (abs(up[j][i]) > EPS)
             {
+
+
+
+
                 for (int k = i + 1; k < n; k++)
                     up[j][k] -= low[j][i] * up[i][k];
                 up[j][i] = 0;
