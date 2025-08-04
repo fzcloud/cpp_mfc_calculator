@@ -184,6 +184,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Algebra.h" />
+    <ClInclude Include="Child1Dlg.h" />
+    <ClInclude Include="Child2Dlg.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="MFCCalculator.h" />
     <ClInclude Include="MFCCalculatorDlg.h" />
@@ -194,6 +196,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Algebra.cpp" />
+    <ClCompile Include="Child1Dlg.cpp" />
+    <ClCompile Include="Child2Dlg.cpp" />
     <ClCompile Include="MFCCalculator.cpp" />
     <ClCompile Include="MFCCalculatorDlg.cpp" />
     <ClCompile Include="pch.cpp">

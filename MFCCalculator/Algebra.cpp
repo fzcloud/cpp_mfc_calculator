@@ -14,106 +14,106 @@ using namespace std;
 
 unique_ptr<Algebra> Algebra::operator+(const Algebra &x) const
 {
-    throw runtime_error("illegal!!!\n");
+    throw runtime_error("错误\n");
 }
 
 unique_ptr<Algebra> Algebra::addTo(const Matrix &x) const
 {
-    throw runtime_error("illegal!!!\n");
+    throw runtime_error("错误\n");
 }
 
 unique_ptr<Algebra> Algebra::addTo(const Double &x) const
 {
-    throw runtime_error("illegal!!!\n");
+    throw runtime_error("错误\n");
 }
 
 unique_ptr<Algebra> Algebra::operator-(const Algebra &x) const
 {
-    throw runtime_error("illegal!!!\n");
+    throw runtime_error("错误\n");
 }
 
 unique_ptr<Algebra> Algebra::subTo(const Matrix &x) const
 {
-    throw runtime_error("illegal!!!\n");
+    throw runtime_error("错误\n");
 }
 
 unique_ptr<Algebra> Algebra::subTo(const Double &x) const
 {
-    throw runtime_error("illegal!!!\n");
+    throw runtime_error("错误\n");
 }
 
 unique_ptr<Algebra> Algebra::operator*(const Algebra &x) const
 {
-    throw runtime_error("illegal!!!\n");
+    throw runtime_error("错误\n");
 }
 
 unique_ptr<Algebra> Algebra::mulTo(const Matrix &x) const
 {
-    throw runtime_error("illegal!!!\n");
+    throw runtime_error("错误\n");
 }
 
 unique_ptr<Algebra> Algebra::mulTo(const Double &x) const
 {
-    throw runtime_error("illegal!!!\n");
+    throw runtime_error("错误\n");
 }
 
 unique_ptr<Algebra> Algebra::operator/(const Algebra &x) const
 {
-    throw runtime_error("illegal!!!\n");
+    throw runtime_error("错误\n");
 }
 
 unique_ptr<Algebra> Algebra::divTo(const Matrix &x) const
 {
-    throw runtime_error("illegal!!!\n");
+    throw runtime_error("错误\n");
 }
 
 unique_ptr<Algebra> Algebra::divTo(const Double &x) const
 {
-    throw runtime_error("illegal!!!\n");
+    throw runtime_error("错误\n");
 }
 
 unique_ptr<Algebra> Algebra::getPow(const Algebra &x) const
 {
-    throw runtime_error("illegal!!!\n");
+    throw runtime_error("错误\n");
 }
 
 unique_ptr<Algebra> Algebra::powTo(const Double &x) const
 {
-    throw runtime_error("illegal!!!\n");
+    throw runtime_error("错误\n");
 }
 
 unique_ptr<Algebra> Algebra::powTo(const Matrix &x) const
 {
-    throw runtime_error("illegal!!!\n");
+    throw runtime_error("错误\n");
 }
 
 unique_ptr<Algebra> Algebra::getRank() const
 {
-    throw runtime_error("illegal!!!\n");
+    throw runtime_error("错误\n");
 }
 
 unique_ptr<Algebra> Algebra::getDet() const
 {
-    throw runtime_error("illegal!!!\n");
+    throw runtime_error("错误\n");
 }
 
 unique_ptr<Algebra> Algebra::getInverse() const
 {
-    throw runtime_error("illegal!!!\n");
+    throw runtime_error("错误\n");
 }
 
 unique_ptr<Algebra> Algebra::getTrans() const
 {
-    throw runtime_error("illegal!!!\n");
+    throw runtime_error("错误\n");
 }
 
 unique_ptr<Algebra> Algebra::getAbs() const
 {
-    throw runtime_error("illegal!!!\n");
+    throw runtime_error("错误\n");
 }
 unique_ptr<Algebra> Algebra::getFac() const
 {
-    throw runtime_error("illegal!!!\n");
+    throw runtime_error("错误\n");
 }
 
 //*-------Algebra end-------
@@ -177,7 +177,7 @@ unique_ptr<Algebra> Matrix::addTo(const Matrix &x) const
 {
     if (r != x.r || c != x.c)
     {
-        throw runtime_error("行列不等!!\n");
+        throw runtime_error("行列数不相等\n");
     }
 
     Matrix res(r, c);
@@ -199,7 +199,7 @@ unique_ptr<Algebra> Matrix::subTo(const Matrix &x) const
 
     if (r != x.r || c != x.c)
     {
-        throw runtime_error("行列不等!!\n");
+        throw runtime_error("行列数不相等\n");
     }
 
     Matrix res(r, c);
@@ -220,7 +220,7 @@ unique_ptr<Algebra> Matrix::mulTo(const Matrix &x) const //! x left  *this right
 {
     if (x.c != r)
     {
-        throw runtime_error("行列不匹配!!\n");
+        throw runtime_error("行列数不相等\n");
     }
 
     Matrix res(x.r, c);
@@ -283,7 +283,7 @@ string Matrix::print(const Matrix &x)
 void Matrix::getLU(vector<vector<double>> &low, vector<vector<double>> &up) const
 {
     if (r != c)
-        throw runtime_error(" r != c!!!");
+        throw runtime_error("行列数不相等");
     int n = r;
 
     low = vector<vector<double>>(r, vector<double>(c, 0));
@@ -296,7 +296,7 @@ void Matrix::getLU(vector<vector<double>> &low, vector<vector<double>> &up) cons
             if (abs(up[j][i]) > abs(up[k][i]))
                 k = j;
         if (abs(up[k][i]) < EPS)
-            throw runtime_error("not exist!!!\n");
+            throw runtime_error("不存在\n");
 
         if (i != k)
         {
@@ -466,7 +466,7 @@ unique_ptr<Algebra> Double::operator/(const Algebra &x) const
 unique_ptr<Algebra> Double::divTo(const Matrix &x) const
 {
     if (fabs(num) < EPS)
-        throw runtime_error("chushu is 0'\n");
+        throw runtime_error("输出为 0\n");
 
     Matrix res(x.r, x.c);
     for (int i = 0; i < x.r; i++)
@@ -479,7 +479,7 @@ unique_ptr<Algebra> Double::divTo(const Double &x) const
 {
 
     if (fabs(num) < EPS)
-        throw runtime_error("chushu is 0");
+        throw runtime_error("输出为 0");
     return make_unique<Double>(x.num / num);
 }
 
@@ -513,7 +513,7 @@ unique_ptr<Algebra> Double::powTo(const Double &x) const /// x.num bottom  num p
 unique_ptr<Algebra> Double::powTo(const Matrix &x) const
 {
     if (x.r != x.c)
-        throw runtime_error("r != c!!!!\n");
+        throw runtime_error("行列数不相等\n");
 
     Matrix res(x.r, x.c);
     for (int i = 0; i < x.r; i++)
@@ -545,16 +545,16 @@ unique_ptr<Algebra> Double::getAbs() const
 unique_ptr<Algebra> Double::getFac() const
 {
     if (num < 0)
-        throw runtime_error("negative has no factorial\n");
+        throw runtime_error("负数没有阶乘\n");
     else if ((num - floor(num) > EPS))
-        throw runtime_error("decimal has no factorial\n");
+        throw runtime_error("十进制没有阶乘\n");
 
     double result = 1.0;
 
     for (int i = 1; i <= num; i++)
     {
         if (result > 0x3f3f3f3f3f3f3f3f / i)
-            throw runtime_error("too big\n");
+            throw runtime_error("数据溢出");
         result *= i;
     }
     return make_unique<Double>(result);

@@ -8,6 +8,7 @@
 #include "MFCCalculatorDlg.h"
 #include "afxdialogex.h"
 #include "Calculator.h"
+#include "resource.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -60,6 +61,8 @@ CMFCCalculatorDlg::CMFCCalculatorDlg(CWnd* pParent /*=nullptr*/)
 void CMFCCalculatorDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+
+	DDX_Control(pDX, IDC_STATICBTN, m_staticbtn);
 }
 
 BEGIN_MESSAGE_MAP(CMFCCalculatorDlg, CDialogEx)
@@ -67,30 +70,8 @@ BEGIN_MESSAGE_MAP(CMFCCalculatorDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	
-	ON_BN_CLICKED(IDC_BUTTON1, &CMFCCalculatorDlg::OnBnClickedButton1)
-	ON_BN_CLICKED(IDC_BUTTON2, &CMFCCalculatorDlg::OnBnClickedButton2)
-	ON_BN_CLICKED(IDC_BUTTON3, &CMFCCalculatorDlg::OnBnClickedButton3)
-	ON_BN_CLICKED(IDC_BUTTON4, &CMFCCalculatorDlg::OnBnClickedButton4)
-	ON_BN_CLICKED(IDC_BUTTON5, &CMFCCalculatorDlg::OnBnClickedButton5)
-	ON_BN_CLICKED(IDC_BUTTON6, &CMFCCalculatorDlg::OnBnClickedButton6)
-	ON_BN_CLICKED(IDC_BUTTON7, &CMFCCalculatorDlg::OnBnClickedButton7)
-	ON_BN_CLICKED(IDC_BUTTON8, &CMFCCalculatorDlg::OnBnClickedButton8)
-	ON_BN_CLICKED(IDC_BUTTON9, &CMFCCalculatorDlg::OnBnClickedButton9)
-	ON_BN_CLICKED(IDC_BUTTON0, &CMFCCalculatorDlg::OnBnClickedButton0)
-	ON_BN_CLICKED(IDC_BUTTON_FAC, &CMFCCalculatorDlg::OnBnClickedButtonFac)
-	ON_BN_CLICKED(IDC_BUTTON_DOT, &CMFCCalculatorDlg::OnBnClickedButtonDot)
-	ON_BN_CLICKED(IDC_BUTTON_ADD, &CMFCCalculatorDlg::OnBnClickedButtonAdd)
-	ON_BN_CLICKED(IDC_BUTTON_SUB, &CMFCCalculatorDlg::OnBnClickedButtonSub)
-	ON_BN_CLICKED(IDC_BUTTON_MUL, &CMFCCalculatorDlg::OnBnClickedButtonMul)
-	ON_BN_CLICKED(IDC_BUTTON_DIV, &CMFCCalculatorDlg::OnBnClickedButtonDiv)
-	ON_BN_CLICKED(IDC_BUTTON_LBRACKET, &CMFCCalculatorDlg::OnBnClickedButtonLbracket)
-	ON_BN_CLICKED(IDC_BUTTON_RBRACKET, &CMFCCalculatorDlg::OnBnClickedButtonRbracket)
-	ON_BN_CLICKED(IDC_BUTTON_POW, &CMFCCalculatorDlg::OnBnClickedButtonPow)
-	ON_BN_CLICKED(IDC_BUTTON_ABS, &CMFCCalculatorDlg::OnBnClickedButtonAbs)
-	ON_BN_CLICKED(IDC_BUTTON_CL, &CMFCCalculatorDlg::OnBnClickedButtonCl)
-	ON_BN_CLICKED(IDC_BUTTON_DEL, &CMFCCalculatorDlg::OnBnClickedButtonDel)
-	ON_BN_CLICKED(IDC_BUTTON_REM, &CMFCCalculatorDlg::OnBnClickedButtonRem)
-	ON_BN_CLICKED(IDC_BUTTON_EQL, &CMFCCalculatorDlg::OnBnClickedButtonEql)
+	ON_COMMAND(ID_DLG_NORMAL, &CMFCCalculatorDlg::OnDlgNormal)
+	ON_COMMAND(ID_DLG_MATRIX, &CMFCCalculatorDlg::OnDlgMatrix)
 END_MESSAGE_MAP()
 
 
@@ -126,6 +107,9 @@ BOOL CMFCCalculatorDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	// TODO: 在此添加额外的初始化代码
+	child1.Create(IDD_CHILD_1, &m_staticbtn);
+	child1.ShowWindow(SW_SHOW);
+	DlgPtr = &child1;
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -179,225 +163,32 @@ HCURSOR CMFCCalculatorDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
-void CMFCCalculatorDlg::AddToEditExp(UINT IDC_Button)
+bool isChild2Create = false;
+
+void CMFCCalculatorDlg::OnDlgNormal()
 {
-	CString strBtn;
-	CString strExp;
-	CString eql ;
-	eql = "0";
-	GetDlgItem(IDC_Button)->GetWindowText(strBtn);
-	GetDlgItem(IDC_EDIT1)->GetWindowText(strExp);
-	if (strExp.Compare(eql) == 0) strExp = "";
-	SetDlgItemText(IDC_EDIT1, strExp + strBtn);
-}
-
-
-
-void CMFCCalculatorDlg::OnBnClickedButton1()
-{
-	// TODO: 在此添加控件通知处理程序代码
-	AddToEditExp(IDC_BUTTON1);
-}
-
-
-void CMFCCalculatorDlg::OnBnClickedButton2()
-{
-	// TODO: 在此添加控件通知处理程序代码
-
-	AddToEditExp(IDC_BUTTON2);
-}
-
-
-void CMFCCalculatorDlg::OnBnClickedButton3()
-{
-	// TODO: 在此添加控件通知处理程序代码
-	AddToEditExp(IDC_BUTTON3);
-}
-
-
-void CMFCCalculatorDlg::OnBnClickedButton4()
-{
-	// TODO: 在此添加控件通知处理程序代码
-	AddToEditExp(IDC_BUTTON4);
-}
-
-
-void CMFCCalculatorDlg::OnBnClickedButton5()
-{
-	// TODO: 在此添加控件通知处理程序代码
-	AddToEditExp(IDC_BUTTON5);
-}
-
-
-void CMFCCalculatorDlg::OnBnClickedButton6()
-{
-	// TODO: 在此添加控件通知处理程序代码
-	AddToEditExp(IDC_BUTTON6);
-}
-
-
-void CMFCCalculatorDlg::OnBnClickedButton7()
-{
-	// TODO: 在此添加控件通知处理程序代码
-	AddToEditExp(IDC_BUTTON7);
-}
-
-
-void CMFCCalculatorDlg::OnBnClickedButton8()
-{
-	// TODO: 在此添加控件通知处理程序代码
-	AddToEditExp(IDC_BUTTON8);
-}
-
-
-void CMFCCalculatorDlg::OnBnClickedButton9()
-{
-	// TODO: 在此添加控件通知处理程序代码
-	AddToEditExp(IDC_BUTTON9);
-}
-
-
-void CMFCCalculatorDlg::OnBnClickedButton0()
-{
-	// TODO: 在此添加控件通知处理程序代码
-	AddToEditExp(IDC_BUTTON0);
-}
-
-
-void CMFCCalculatorDlg::OnBnClickedButtonFac()
-{
-	// TODO: 在此添加控件通知处理程序代码
-	AddToEditExp(IDC_BUTTON_FAC);
-}
-
-
-void CMFCCalculatorDlg::OnBnClickedButtonDot()
-{
-	// TODO: 在此添加控件通知处理程序代码
-	AddToEditExp(IDC_BUTTON_DOT);
-}
-
-
-void CMFCCalculatorDlg::OnBnClickedButtonAdd()
-{
-	// TODO: 在此添加控件通知处理程序代码
-	AddToEditExp(IDC_BUTTON_ADD);
-}
-
-
-void CMFCCalculatorDlg::OnBnClickedButtonSub()
-{
-	// TODO: 在此添加控件通知处理程序代码
-	AddToEditExp(IDC_BUTTON_SUB);
-}
-
-
-void CMFCCalculatorDlg::OnBnClickedButtonMul()
-{
-	// TODO: 在此添加控件通知处理程序代码
-	AddToEditExp(IDC_BUTTON_MUL);
-}
-
-
-void CMFCCalculatorDlg::OnBnClickedButtonDiv()
-{
-	// TODO: 在此添加控件通知处理程序代码
-	AddToEditExp(IDC_BUTTON_DIV);
-}
-
-
-void CMFCCalculatorDlg::OnBnClickedButtonLbracket()
-{
-	// TODO: 在此添加控件通知处理程序代码
-	AddToEditExp(IDC_BUTTON_LBRACKET);
-}
-
-
-void CMFCCalculatorDlg::OnBnClickedButtonRbracket()
-{
-	// TODO: 在此添加控件通知处理程序代码
-	AddToEditExp(IDC_BUTTON_RBRACKET);
-}
-
-
-void CMFCCalculatorDlg::OnBnClickedButtonPow()
-{
-	// TODO: 在此添加控件通知处理程序代码
-	AddToEditExp(IDC_BUTTON_POW);
-}
-
-
-void CMFCCalculatorDlg::OnBnClickedButtonAbs()
-{
-	// TODO: 在此添加控件通知处理程序代码
-	AddToEditExp(IDC_BUTTON_ABS);
-}
-
-
-void CMFCCalculatorDlg::OnBnClickedButtonCl()
-{
-	// TODO: 在此添加控件通知处理程序代码
-	SetDlgItemText(IDC_EDIT1, NULL);
-	CString cstr;
-	cstr = "0";
-	SetDlgItemText(IDC_EDIT1, cstr);
-	cstr = "";
-	SetDlgItemText(IDC_STATIC, cstr);
-}
-
-
-void CMFCCalculatorDlg::OnBnClickedButtonDel()
-{
-	// TODO: 在此添加控件通知处理程序代码
-	CString strExp;
-	GetDlgItem(IDC_EDIT1)->GetWindowText(strExp);
-	strExp = strExp.Left(strExp.GetLength() - 1);
-	SetDlgItemText(IDC_EDIT1, strExp);
-}
-
-void CMFCCalculatorDlg::OnBnClickedButtonRem()
-{
-	// TODO: 在此添加控件通知处理程序代码
-	CString s1, s2, cs;
-	s1 = "1/(";
-	s2 = ")";
-	GetDlgItemText(IDC_EDIT1, cs);
-	SetDlgItemText(IDC_EDIT1, s1 + cs + s2);
-}
-
-
-void CMFCCalculatorDlg::OnBnClickedButtonEql()
-{
-	// TODO: 在此添加控件通知处理程序代码
-	CString strExp;
-	Calculator cal;
-	CString strResult;
-	CString strError;
-	GetDlgItemText(IDC_EDIT1, strExp);
-	string infix(CW2A(strExp.GetString())); //cw2a将Unicode转ASCLL
-	try
+	// TODO: 在此添加命令处理程序代码
+	if (DlgPtr != NULL)
 	{
-		cal.calculator(infix);
+		DlgPtr->ShowWindow(SW_HIDE);
 	}
-	catch (runtime_error &err)
-	{
-		CString strError(err.what());
-		SetDlgItemText(IDC_STATIC, strError);
-		return;
-	}
-	if (cal.isError==1) {
-		strError = "错误";
-		SetDlgItemText(IDC_STATIC, strError);
-	}
-	else if (cal.isError == -1)
-	{
-		strError = "数据溢出";
-		SetDlgItemText(IDC_STATIC, strError);
 
+	child1.ShowWindow(SW_SHOW);
+	DlgPtr = &child1;
+}
+
+void CMFCCalculatorDlg::OnDlgMatrix()
+{
+	if (!isChild2Create) child2.Create(IDD_CHILD_2, &m_staticbtn);
+
+	isChild2Create = true;
+
+	// TODO: 在此添加命令处理程序代码
+	if (DlgPtr != NULL)
+	{
+		DlgPtr->ShowWindow(SW_HIDE);
 	}
-	else {
-		std::string resultStr = cal.getResult();
-		strResult = CString(resultStr.c_str());
-		SetDlgItemText(IDC_STATIC, strResult);
-	}
+
+	child2.ShowWindow(SW_SHOW);
+	DlgPtr = &child2;
 }

@@ -161,7 +161,7 @@ int Calculator::calResult()
 		}
 	}
 	if (figStack.size() != 1)
-		throw runtime_error("unbelivable");
+		throw runtime_error("表达式为空\n");
 
 	if (!figStack.empty())
 	{
@@ -218,7 +218,7 @@ void Calculator::getPostfix()
 			}
 			else
 			{
-				throw runtime_error("??????\n");
+				throw runtime_error("错误\n");
 			}
 		}
 		else if (stdInfix[i] == '(')
@@ -234,7 +234,7 @@ void Calculator::getPostfix()
 			}
 			if (symStack.empty())
 			{
-				throw runtime_error("() do not match");
+				throw runtime_error(" ) 匹配错误");
 			}
 			symStack.pop();
 			if (!symStack.empty() && getPrior(symStack.top()) == PRIO_LV5)
@@ -257,7 +257,7 @@ void Calculator::getPostfix()
 			}
 			else
 			{
-				throw runtime_error("what did you input???\n");
+				throw runtime_error("非法输入\n");
 			}
 		}
 	}
@@ -265,7 +265,7 @@ void Calculator::getPostfix()
 	while (!symStack.empty())
 	{
 		if (symStack.top() == "(")
-			throw runtime_error("() not dmatch");
+			throw runtime_error(" ( 匹配错误");
 		bckFix.push_back(symStack.top());
 		symStack.pop();
 	}
