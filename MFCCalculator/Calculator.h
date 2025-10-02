@@ -30,7 +30,7 @@ public:
 private:
 	vector<string> bckFix;				 // 后缀表达式
 	stack<string> symStack;				 // 临时运算符栈 char -> string
-	stack<unique_ptr<Algebra>> figStack; // 结果栈
+	stack<string> figStack; // 结果栈
 	string stdInfix;
-	unique_ptr<Algebra> result;
+	string result;
 };

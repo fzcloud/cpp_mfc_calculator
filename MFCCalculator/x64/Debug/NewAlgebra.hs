@@ -50,7 +50,7 @@ instance SafeNum Algebra where -- TODO Matr
   safeAdd (Doub a) (IntH b) = Right $ Doub (a + fromInteger b)
   safeAdd (Rati a) (Doub b) = Right $ Doub (fromRational a + b)
   safeAdd (Doub a) (Rati b) = Right $ Doub (a + fromRational b)
-  safeAdd _ _ = Left "存在类型不匹配的加法运算"
+  safeAdd _ _ = Left "错误：存在类型不匹配的加法运算"
 
   safeSub :: Algebra -> Algebra -> Either String Algebra
   safeSub (IntH a) (IntH b) = Right $ IntH (a - b)
@@ -62,7 +62,7 @@ instance SafeNum Algebra where -- TODO Matr
   safeSub (Doub a) (IntH b) = Right $ Doub (a - fromInteger b)
   safeSub (Rati a) (Doub b) = Right $ Doub (fromRational a - b)
   safeSub (Doub a) (Rati b) = Right $ Doub (a - fromRational b)
-  safeSub _ _ = Left "存在类型不匹配的减法运算"
+  safeSub _ _ = Left "错误：存在类型不匹配的减法运算"
 
   safeMul :: Algebra -> Algebra -> Either String Algebra
   safeMul (IntH a) (IntH b) = Right $ IntH (a * b)
@@ -74,12 +74,12 @@ instance SafeNum Algebra where -- TODO Matr
   safeMul (Doub a) (IntH b) = Right $ Doub (a * fromInteger b)
   safeMul (Rati a) (Doub b) = Right $ Doub (fromRational a * b)
   safeMul (Doub a) (Rati b) = Right $ Doub (a * fromRational b)  
-  safeMul _ _ = Left "存在类型不匹配的乘法运算"
+  safeMul _ _ = Left "错误：存在类型不匹配的乘法运算"
 
   safeDiv :: Algebra -> Algebra -> Either String Algebra
-  safeDiv _ (IntH 0) = Left "除数为0"
-  safeDiv _ (Rati 0) = Left "除数为0"
-  safeDiv _ (Doub 0.0) = Left "除数为0"
+  safeDiv _ (IntH 0) = Left "错误：除数为0"
+  safeDiv _ (Rati 0) = Left "错误：除数为0"
+  safeDiv _ (Doub 0.0) = Left "错误：除数为0"
   safeDiv (IntH a) (IntH b) = Right $ ratToIntH (a % b)
   safeDiv (Rati a) (Rati b) = Right $ Rati (a / b)
   safeDiv (Doub a) (Doub b) = Right $ Doub (a / b)      
@@ -89,7 +89,7 @@ instance SafeNum Algebra where -- TODO Matr
   safeDiv (Doub a) (IntH b) = Right $ Doub (a /fromInteger b)
   safeDiv (Rati a) (Doub b) = Right $ Doub (fromRational a / b)
   safeDiv (Doub a) (Rati b) = Right $ Doub (a / fromRational b)  
-  safeDiv _ _ = Left "存在类型不匹配的除法运算"
+  safeDiv _ _ = Left "错误：存在类型不匹配的除法运算"
 
 instance Read Algebra where
   readPrec :: ReadPrec Algebra
@@ -139,10 +139,10 @@ calculate x op y = case (readMaybe x :: Maybe Algebra, readMaybe y :: Maybe Alge
     "-" -> ans $ safeSub a b
     "*" -> ans $ safeMul a b
     "/" -> ans $ safeDiv a b
-    _ -> "不存在的运算符"
-  (Nothing, Just b) -> "左操作数不合法"
-  (Just a, Nothing) -> "右操作数不合法"
-  (Nothing, Nothing) -> "左右操作数均不合法"
+    _ -> "错误：不存在的运算符"
+  (Nothing, Just b) -> "错误：左操作数不合法"
+  (Just a, Nothing) -> "错误：右操作数不合法"
+  (Nothing, Nothing) -> "错误：左右操作数均不合法"
   where
     ans (Right res) = showAlgebra res
     ans (Left err) = err
@@ -152,4 +152,4 @@ main = do
   args <- getArgs
   case args of
     [a, op, b] -> putStrLn $ calculate a op b
-    _ -> putStrLn "内部运算格式异常"
+    _ -> putStrLn "错误：内部运算格式异常"

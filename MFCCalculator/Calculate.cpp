@@ -47,7 +47,7 @@ enum ABS_OE
 // ��ʼ��
 Calculator::Calculator()
 {
-	result = make_unique<Double>(0);
+	result = "";
 	isError = 0;
 }
 
@@ -90,16 +90,10 @@ void Calculator::calculator(string infix)
 // ���ؽ�ￄ1�7
 string Calculator::getResult()
 {
-	string ans;
-	if (result)
-	{
-		if (auto d = dynamic_cast<Double *>(result.get()))
-			ans = Double::print(*d);
-		else if (auto m = dynamic_cast<Matrix *>(result.get()))
-			ans = Matrix::print(*m);
-		else
-			throw("你看不见我\n");
-	}
+	if (result != "")
+		return result;
+	else
+		throw ("what the hell");
 
 	return ans;
 }
@@ -107,69 +101,45 @@ string Calculator::getResult()
 // ������
 int Calculator::calResult()
 {
-	unique_ptr<Algebra> left, right;
+	string left, right;
 
 	for (const auto &token : bckFix)
 	{
-		if (token[0] >= '0' && token[0] <= '9')
+		if (token[0] >= '0' && token[0] <= '9' || token[0] == '[')
 		{
-			figStack.push(make_unique<Double>(token));
-		}
-		else if (token[0] == '[')
-		{
-			figStack.push(make_unique<Matrix>(token));
+			figStack.push(token);
 		}
 		else if (token == "!" || token == "|" || token == "inv" || token == "trans" || token == "det" || token == "rank")
 		{
 			if (figStack.size() < 1)
 				return 1;
-			right = move(figStack.top());
+			right = figStack.top();
 			figStack.pop();
+			//TODO 
 			
-			if (token == "!")
-				figStack.push(right->getFac());
-			else if (token == "|")
-				figStack.push(right->getAbs());
-			else if (token == "inv")
-				figStack.push(right->getInverse());
-			else if (token == "trans")
-				figStack.push(right->getTrans());
-			else if (token == "det")
-				figStack.push(right->getDet());
-			else if (token == "rank")
-				figStack.push(right->getRank());
 		}
 		else if (token == "+" || token == "-" || token == "*" || token == "/" || token == "^")
 		{
 			if (figStack.size() < 2)
 				return 1;
-			right = move(figStack.top());
+			right = figStack.top();
 			figStack.pop();
-			left = move(figStack.top());
+			left = figStack.top();
 			figStack.pop();
-
-			if (token == "+")
-				figStack.push(*left + *right);
-			else if (token == "-")
-				figStack.push(*left - *right);
-			else if (token == "*")
-				figStack.push(*left * *right);
-			else if (token == "/")
-				figStack.push(*left / *right);
-			else if (token == "^")
-				figStack.push(left->getPow(*right));
+			string tmp = calculate(left, token, right);
+			if (tmp.find("错误：") == 0)
+			{
+				res = tmp;
+				return 1;
+			}
+			figStack.push(tmp);
 		}
 	}
 	if (figStack.size() != 1)
 		throw runtime_error("表达式为空\n");
 
 	if (!figStack.empty())
-	{
-		if (auto d = dynamic_cast<Double *>(figStack.top().get()))
-			result = make_unique<Double>(*d);
-		else if (auto m = dynamic_cast<Matrix *>(figStack.top().get()))
-			result = make_unique<Matrix>(*m);
-	}
+		result = figStack.top();
 	return 0;
 }
 //!-------------------以下必定有bug，没bug我吃------------------------
